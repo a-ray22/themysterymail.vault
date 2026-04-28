@@ -1,0 +1,18 @@
+{
+  "siteTitle": "Themysterymail Vault",
+  "games": [
+    {
+      "id": "case-1-final-whistle",
+      "title": "Case 1 — Final Whistle",
+      "username": "KABIR-VAULT-M7K2",
+      "passwordSegments": ["CJ", "54", "7", "CE", "47", "25"],
+      "directoryRootLabel": "Kabir's Digital Directory",
+      "files": [
+        {
+          "name": "Case File Envelope.txt",
+          "content": "CONFIDENTIAL — CASE FILE\n\nIf you are reading this, you have cleared the first gate.\n\nThe code to the second envelope is 223.\n\nDo not share this file. Lay out every document before opening the physical lock.\n\n— Kabir Sawant (digital copy)"
+        }
+      ]
+    }
+  ]
+}

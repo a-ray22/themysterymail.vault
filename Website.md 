@@ -1,0 +1,1070 @@
+You are a senior Shopify theme developer and conversion-focused web designer.
+
+Build a custom Shopify Online Store 2.0 theme for a puzzle-envelope ecommerce brand. The theme should be clean, cinematic, warm, mysterious, mobile-first, and built specifically for a small Indian puzzle startup selling story-led mystery puzzle envelopes.
+
+Use:
+- Shopify Liquid
+- JSON templates
+- Reusable sections and blocks
+- CSS in assets/theme.css
+- Vanilla JavaScript in assets/theme.js
+- No React
+- No Framer
+- No external JS libraries unless absolutely necessary
+- No fake checkout
+- Use Shopify product forms, Shopify cart, Shopify checkout, and Shopify contact form
+
+Important:
+The top navigation should have only three main items:
+1. Home
+2. About Us
+3. Game
+
+The “Game” menu item should be a dropdown with:
+- Hints
+- Locker
+
+So the store will have these routes:
+- Home: /
+- About Us: /pages/about-us
+- Hints: /pages/hints
+- Locker: /pages/locker
+
+The first product is:
+Final Whistle: Murder on the Konkan Line
+
+It is an Indian crime-investigation puzzle in an envelope. The customer plays as a private investigator helping an injured detective. The story is set around a fictional Goa-to-Mumbai football final journey. The victim is Devraj “Dev” Naik, star striker of Baga Bay FC. The opening stage includes a letter from Senior Inspector Kabir Sawant, six password puzzles, an online evidence database, and a locked second envelope.
+
+Do not use real football clubs, real tournaments, real players, or real federations. Keep everything fictional.
+
+The design should feel like:
+- Case file
+- Detective desk
+- Indian mystery
+- Premium puzzle product
+- Emotional and cinematic, but not horror
+- Family/couple/friends-friendly
+- Modern ecommerce, not gimmicky
+
+Use the Shopify shop name dynamically where possible, for example {{ shop.name }}.
+
+====================================================
+THEME FILE STRUCTURE TO CREATE
+====================================================
+
+Create or update the following files:
+
+layout/theme.liquid
+
+templates/index.json
+templates/page.about.json
+templates/page.hints.json
+templates/page.locker.json
+templates/product.json
+templates/search.json
+templates/cart.json
+
+sections/header.liquid
+sections/footer.liquid
+sections/home-hero.liquid
+sections/home-origin-story.liquid
+sections/featured-case-product.liquid
+sections/puzzle-explainer.liquid
+sections/store-aim.liquid
+sections/contact-form-section.liquid
+sections/about-founders.liquid
+sections/future-library.liquid
+sections/hints-directory.liquid
+sections/locker-directory.liquid
+sections/main-product.liquid
+sections/main-cart.liquid
+sections/main-search.liquid
+
+snippets/product-card.liquid
+snippets/price.liquid
+snippets/icon.liquid
+
+assets/theme.css
+assets/theme.js
+
+config/settings_schema.json
+locales/en.default.json
+
+====================================================
+GLOBAL DESIGN REQUIREMENTS
+====================================================
+
+Use CSS custom properties for colors, spacing, border radius, typography, and shadows.
+
+Suggested palette:
+- Background: warm off-white / paper tone
+- Primary text: deep charcoal
+- Accent: dark navy
+- Secondary accent: maroon
+- Highlight: muted gold
+- Cards: paper white
+- Borders: soft beige/grey
+- Error: muted red
+- Success: forest green
+
+Suggested visual style:
+- Rounded cards
+- Paper texture feel using subtle CSS gradients only, no heavy image background
+- Large editorial headings
+- Product images with torn-paper / case-file style frames
+- Buttons should feel premium and clickable
+- Use generous whitespace
+- Fully responsive from mobile to desktop
+
+Accessibility:
+- Semantic HTML
+- Proper labels for forms
+- Keyboard-focus states
+- Accessible dropdown menu
+- Alt text support for all uploaded images
+- Buttons must be actual buttons or links
+- Do not rely only on color to show errors
+
+Performance:
+- Lazy-load non-critical images
+- Use Shopify image_url filters
+- Avoid huge CSS/JS
+- Use defer for theme.js
+- No animation that hurts performance
+
+====================================================
+HEADER
+====================================================
+
+Create a header section with:
+- Logo/shop name on the left
+- Navigation links:
+  - Home -> /
+  - About Us -> /pages/about-us
+  - Game dropdown:
+    - Hints -> /pages/hints
+    - Locker -> /pages/locker
+- Cart link/icon on the right
+- Mobile hamburger menu
+- Optional CTA button: “Order the First Case” linking to the first product or featured product section
+
+Header copy:
+- Store name: use {{ shop.name }}
+- CTA: Order the First Case
+- Dropdown label: Game
+- Dropdown items: Hints, Locker
+
+====================================================
+FOOTER
+====================================================
+
+Create a footer with:
+- Short brand mission
+- Quick links
+- Game links
+- Contact note
+- Copyright
+
+Footer copy:
+
+Mission:
+“We create mystery puzzle envelopes designed to bring people around one table — to read, argue, decode, laugh, suspect, and solve together.”
+
+Quick links:
+Home
+About Us
+Hints
+Locker
+Contact
+
+Game links:
+Final Whistle: Murder on the Konkan Line
+Hints Directory
+Online Locker
+
+Contact note:
+“Questions, collaborations, bulk orders, or language requests? Send us a message — we read every note.”
+
+Copyright:
+“© {{ 'now' | date: '%Y' }} {{ shop.name }}. All stories, clubs, tournaments, and characters are fictional.”
+
+====================================================
+HOME PAGE
+====================================================
+
+The homepage should be built from these sections:
+1. home-hero
+2. home-origin-story
+3. featured-case-product
+4. puzzle-explainer
+5. store-aim
+6. contact-form-section
+
+----------------------------------------------------
+SECTION 1: HOME HERO
+----------------------------------------------------
+
+Purpose:
+Introduce the brand and idea briefly.
+
+Layout:
+- Left: headline, paragraph, buttons
+- Right: atmospheric placeholder image/card stack
+- Add small badges: “Made for groups”, “Story-led”, “Play at home”
+
+Hero copy:
+
+Eyebrow:
+“Escape-room energy. Envelope-sized.”
+
+Headline:
+“Bring the mystery home.”
+
+Subheadline:
+“{{ shop.name }} creates story-led puzzle envelopes for people who love escape rooms, crime mysteries, codes, clues, and the feeling of solving something together.”
+
+Body:
+“Our games are made for living rooms, dining tables, cafés, family nights, date nights, and friend groups who want more than another screen. Open the envelope, enter the story, follow the clues, and unlock the truth one puzzle at a time.”
+
+Primary button:
+“Order the First Case”
+
+Secondary button:
+“How It Works”
+
+Badges:
+“Play at home”
+“Built for teamwork”
+“Fictional Indian mysteries”
+“No app required to begin”
+
+----------------------------------------------------
+SECTION 2: HOME ORIGIN STORY
+----------------------------------------------------
+
+Purpose:
+Explain how the store came about.
+
+Copy:
+
+Eyebrow:
+“Why we started”
+
+Heading:
+“We wanted the thrill of an escape room without needing an escape room.”
+
+Body paragraph 1:
+“Some of our favourite memories have come from escape rooms and puzzle nights — the sudden silence when everyone is thinking, the chaos when someone spots a clue, the argument over one tiny detail, and the celebration when the answer finally clicks.”
+
+Body paragraph 2:
+“But escape rooms are not always easy to access. They need a location, a booking, a fixed group, and a fixed time. We wanted to create something people could open anywhere — a mystery that could sit inside an envelope and still feel like an adventure.”
+
+Body paragraph 3:
+“That is how {{ shop.name }} began: with the idea of turning cinematic stories, physical clues, hidden passwords, and detective-style evidence into puzzle experiences that people can solve together at home.”
+
+Small pull quote:
+“Less scrolling. More solving.”
+
+----------------------------------------------------
+SECTION 3: FEATURED CASE PRODUCT
+----------------------------------------------------
+
+Purpose:
+The majority of the homepage should introduce the first product.
+
+This section must be connected to a Shopify product selected in the theme editor.
+Use a product picker setting named selected_product.
+If no product is selected, show placeholder content without breaking.
+
+Important:
+The product should use Shopify variants for language selection. Do not create a fake language dropdown. Use the selected product’s variants as the language selector. Example variant option name: Language. Example values: English, Hindi, Marathi, Konkani, etc.
+
+Layout:
+- Large main product image
+- Collage grid of 4-6 additional images uploaded later through section settings
+- Product title
+- Description
+- What’s inside
+- Language selector
+- Quantity selector
+- Add to cart / Order button
+- Trust notes
+
+Section copy:
+
+Eyebrow:
+“Our first investigation”
+
+Product title fallback:
+“Final Whistle: Murder on the Konkan Line”
+
+Tagline:
+“A football final. A dead striker. A killer travelling with the team.”
+
+Description paragraph 1:
+“Devraj ‘Dev’ Naik was supposed to lead Baga Bay FC into the biggest match of his life. Instead, he died during the journey from Goa to Mumbai — minutes after a treatment that should have helped him play.”
+
+Description paragraph 2:
+“Senior Inspector Kabir Sawant suspected murder before a suspicious accident left him injured and unable to remember the password to his private evidence database. Now the case has reached you.”
+
+Description paragraph 3:
+“You will receive a physical puzzle envelope containing Kabir’s letter, six puzzles, and the first layer of the investigation. Solve the puzzles, recover the database password, unlock the online vault, and continue the case.”
+
+What’s inside heading:
+“What’s inside the envelope?”
+
+What’s inside bullets:
+- “A private letter from Senior Inspector Kabir Sawant”
+- “Six printable/physical puzzles that reveal the database password”
+- “An online evidence vault connected to the story”
+- “A locked second-envelope stage for the next part of the investigation”
+- “Case files, suspect details, timelines, clues, contradictions, and red herrings”
+- “A mystery designed to be solved together”
+
+Language heading:
+“Choose your case language”
+
+Language helper:
+“Select the language you want to receive. Available languages depend on current stock.”
+
+Quantity label:
+“Number of cases”
+
+Order button:
+“Order the Case”
+
+Sold out button:
+“Currently Sold Out”
+
+Trust notes:
+- “Made in India”
+- “Fictional case”
+- “Best played together”
+- “No prior puzzle experience required”
+
+Image labels / alt text defaults:
+Main image alt:
+“Final Whistle puzzle envelope product photo”
+
+Collage image alt examples:
+“Puzzle papers and case files”
+“Detective evidence layout”
+“Envelope mystery game components”
+“Friends solving a mystery puzzle at a table”
+“Locked case envelope”
+“Indian crime investigation puzzle set”
+
+----------------------------------------------------
+SECTION 4: PUZZLE EXPLAINER
+----------------------------------------------------
+
+Purpose:
+Explain what the puzzles are exactly like.
+
+Copy:
+
+Eyebrow:
+“What are our puzzles like?”
+
+Heading:
+“Part story. Part investigation. Part escape room.”
+
+Intro:
+“Our puzzles are not just random riddles. Every clue belongs to the story. Every document is there for a reason. You may read a witness note, compare a timeline, decode a hidden message, inspect a contract clause, spot a contradiction, or unlock an online file.”
+
+Subsections:
+
+1. Heading:
+“Read the story”
+Text:
+“Each game begins with a situation that pulls you into the case. You are not watching the mystery from outside — you are part of the investigation.”
+
+2. Heading:
+“Solve physical clues”
+Text:
+“You work through printed puzzle sheets, case documents, maps, notes, codes, and evidence-style assets. Some answers are obvious only after your group has argued about them for ten minutes.”
+
+3. Heading:
+“Unlock digital evidence”
+Text:
+“Certain answers open an online locker or evidence vault, allowing the story to move forward without needing an app download.”
+
+4. Heading:
+“Open the next layer”
+Text:
+“Some cases may include locked envelopes, hidden files, staged hints, or reveal moments that make the game feel like a case unfolding in real time.”
+
+5. Heading:
+“Play together”
+Text:
+“Our goal is not to test one genius in the room. It is to create moments where everyone notices something different.”
+
+How it works heading:
+“How it works”
+
+Steps:
+1. “Open the envelope”
+Description: “Read the opening letter and lay out the first set of clues.”
+
+2. “Solve the puzzles”
+Description: “Work through the documents, codes, and observations as a team.”
+
+3. “Unlock the vault”
+Description: “Use your answer to access the online case locker.”
+
+4. “Follow the evidence”
+Description: “Open the next stage, inspect the case files, and move closer to the truth.”
+
+5. “Solve the mystery”
+Description: “Name the culprit, explain the method, and prove your theory.”
+
+----------------------------------------------------
+SECTION 5: STORE AIM
+----------------------------------------------------
+
+Purpose:
+Describe the aim of the store: bringing people together.
+
+Copy:
+
+Eyebrow:
+“Our aim”
+
+Heading:
+“Bringing people together, one mystery at a time.”
+
+Body paragraph 1:
+“We believe puzzles are at their best when they become social. Someone reads carefully. Someone notices a pattern. Someone makes a wild theory. Someone else proves it wrong. Slowly, the group becomes a team.”
+
+Body paragraph 2:
+“{{ shop.name }} exists to create that feeling — the kind of shared experience where families, couples, friends, siblings, colleagues, and curious strangers can gather around a table and forget their phones for a while.”
+
+Body paragraph 3:
+“We want to build games that feel Indian in their details, cinematic in their stories, fair in their puzzles, and satisfying when the final answer lands.”
+
+Values heading:
+“What we care about”
+
+Values:
+- “Togetherness over screen time”
+- “Fair clues, not impossible riddles”
+- “Indian stories with fictional characters”
+- “Mystery without unnecessary gore”
+- “Puzzles for adults, families, and eventually children too”
+- “Multiple languages so more people can play comfortably”
+
+----------------------------------------------------
+SECTION 6: CONTACT FORM
+----------------------------------------------------
+
+Use Shopify’s native contact form:
+{% form 'contact' %}
+
+Purpose:
+A contact section at the bottom of home.
+
+Copy:
+
+Eyebrow:
+“Contact us”
+
+Heading:
+“Have a question, idea, or collaboration in mind?”
+
+Body:
+“Whether you want to ask about orders, suggest a language, discuss a corporate game night, request a bulk order, or simply tell us what kind of mystery you want next — we would love to hear from you.”
+
+Fields:
+Name
+Email
+Message
+
+Submit button:
+“Send Message”
+
+Success message:
+“Thank you. Your message has been sent.”
+
+Error message:
+“Please check the form and try again.”
+
+Placeholder message:
+“Tell us what you’re looking for…”
+
+====================================================
+ABOUT US PAGE
+====================================================
+
+Template:
+page.about.json
+
+Sections:
+1. about-founders
+2. future-library
+3. contact-form-section
+
+----------------------------------------------------
+SECTION: ABOUT FOUNDERS
+----------------------------------------------------
+
+Purpose:
+About us page with sketch of the couple.
+
+Layout:
+- Left: image placeholder / uploaded sketch of couple
+- Right: about copy
+- Add warm personal tone
+
+Use an image_picker setting:
+founder_sketch
+
+Image alt:
+“Sketch of the founders of {{ shop.name }}”
+
+Copy:
+
+Eyebrow:
+“About us”
+
+Heading:
+“We are two puzzle lovers trying to bring the escape room feeling home.”
+
+Body paragraph 1:
+“We are a couple who love escape rooms, mystery boxes, detective stories, clue trails, and the exact moment when a group suddenly realises that one tiny detail changes everything.”
+
+Body paragraph 2:
+“Over time, we found ourselves chasing that feeling wherever we could — booking escape rooms, trying puzzle games, discussing clues after the game was over, and wondering why more people did not get to experience this kind of play at home.”
+
+Body paragraph 3:
+“{{ shop.name }} is our attempt to build that bridge. We want to create puzzle envelopes that feel personal, story-rich, and exciting without needing a large setup, a special venue, or complicated technology.”
+
+Body paragraph 4:
+“Our dream is simple: open an envelope, sit together, and enter a mystery.”
+
+Small note heading:
+“Why envelopes?”
+
+Small note text:
+“Because an envelope feels personal. It can hold a letter, a secret, a warning, a clue, a map, a confession, or a locked instruction. It is small enough to travel anywhere, but powerful enough to begin a whole story.”
+
+Founder quote:
+“We are not just making products. We are making reasons for people to gather.”
+
+----------------------------------------------------
+SECTION: FUTURE LIBRARY
+----------------------------------------------------
+
+Purpose:
+Explain future updates and expansion plans.
+
+Copy:
+
+Eyebrow:
+“What comes next”
+
+Heading:
+“This is only the first case file.”
+
+Body paragraph 1:
+“If our first puzzle finds its people, we plan to build a growing library of escape-room-style envelope games — different mysteries, different difficulty levels, different formats, and different worlds.”
+
+Body paragraph 2:
+“We want future cases to include crime investigations, adventure puzzles, family-friendly mysteries, children’s puzzle stories, festival specials, travel-inspired games, and larger multi-part investigations.”
+
+Body paragraph 3:
+“We also want to make our games available in multiple Indian languages, so that more families and friend groups can solve in the language they are most comfortable with.”
+
+Future cards:
+1. Title: “More adult mysteries”
+Text: “Deeper investigations, layered suspects, timelines, motives, hidden evidence, and satisfying reveals.”
+
+2. Title: “Children’s puzzle envelopes”
+Text: “Lighter stories, playful clues, age-appropriate mysteries, and puzzles designed for curiosity.”
+
+3. Title: “Multiple languages”
+Text: “English first, then expansion into Indian languages based on demand and player feedback.”
+
+4. Title: “A full puzzle library”
+Text: “A shelf of cases that players can collect, gift, revisit, and recommend.”
+
+Closing CTA:
+“Start with the first case”
+
+Button:
+“Explore Final Whistle”
+
+====================================================
+HINTS PAGE
+====================================================
+
+Template:
+page.hints.json
+
+Section:
+hints-directory
+
+Purpose:
+A searchable directory of hints for each game.
+
+Important:
+Create a clean hints page with:
+- Search input
+- Game cards
+- Expandable accordion sections
+- Multi-level hints
+- Placeholder support for future games
+- The hint content should be editable using section blocks in the Shopify theme editor
+
+Search behavior:
+Use client-side JavaScript to filter hint cards based on:
+- Game title
+- Game handle
+- Puzzle title
+- Keywords
+- Difficulty
+- Language
+
+Do not rely only on Shopify’s global search for this directory. This page should filter visible cards instantly.
+
+Page copy:
+
+Eyebrow:
+“Hints”
+
+Heading:
+“Stuck? Take only the hint you need.”
+
+Intro:
+“Our hints are designed to help you keep moving without spoiling the mystery. Search for your game, choose the puzzle you are working on, and open the hints one step at a time.”
+
+Search placeholder:
+“Search by game, puzzle number, clue, or keyword…”
+
+Before hints box heading:
+“Before you open a hint”
+
+Before hints bullets:
+- “Make sure everyone has read the document carefully.”
+- “Check whether the answer might be hidden in formatting, order, names, dates, or repeated words.”
+- “Use the first hint before jumping to stronger hints.”
+- “Only reveal the answer if your group is completely stuck.”
+
+No results text:
+“No hints found. Try searching by the game name, puzzle number, or a simpler keyword.”
+
+Default game card:
+
+Game title:
+“Final Whistle: Murder on the Konkan Line”
+
+Game description:
+“A crime-investigation puzzle about a football final, a suspicious death, and a detective’s hidden evidence database.”
+
+Game status:
+“Hints available when the case launches.”
+
+Suggested accordion groups:
+- “Getting started”
+- “Phase 1: Password recovery”
+- “Online vault”
+- “Second envelope”
+- “Final accusation”
+
+Default hint content placeholders:
+
+Getting started:
+Hint 1:
+“Start with Kabir’s letter. It tells you what kind of information matters in this case.”
+
+Hint 2:
+“Do not assume every name, place, role, or repeated phrase is only flavour text.”
+
+Hint 3:
+“Organise the documents before trying to solve everything at once.”
+
+Phase 1: Password recovery:
+Hint 1:
+“The first six puzzles are meant to recover a password, not solve the murder yet.”
+
+Hint 2:
+“Track every answer you find. The order of the answers may matter.”
+
+Hint 3:
+“If an answer looks incomplete, check whether it gives a letter, syllable, number, or ordering clue.”
+
+Online vault:
+Hint 1:
+“Enter the password exactly as your six puzzle answers indicate.”
+
+Hint 2:
+“Check spacing, capitalisation, and punctuation only after confirming the actual word or phrase.”
+
+Hint 3:
+“If the vault does not open, revisit the puzzle that felt least certain.”
+
+Second envelope:
+Hint 1:
+“Do not open the locked envelope until the vault gives you the correct code.”
+
+Hint 2:
+“The code is part of the story sequence. Guessing breaks the investigation.”
+
+Final accusation:
+Hint 1:
+“A strong accusation needs motive, means, opportunity, and proof.”
+
+Hint 2:
+“Separate suspicious behaviour from actual evidence.”
+
+Hint 3:
+“The most obvious suspect may not be the person who gained the most.”
+
+====================================================
+LOCKER PAGE
+====================================================
+
+Template:
+page.locker.json
+
+Section:
+locker-directory
+
+Purpose:
+A searchable directory of games where players can unlock online vaults.
+
+Important:
+This should feel like an in-world evidence database / locker.
+
+Create:
+- Search input
+- Game directory cards
+- Each card has:
+  - Game title
+  - Game description
+  - Language badge
+  - Difficulty badge
+  - Input field for vault password
+  - Unlock button
+  - Error message
+  - Success panel that reveals vault content
+
+For MVP:
+It is acceptable to use client-side JavaScript for the unlock interaction, but include a clear code comment:
+“Client-side unlocks are not secure. For high-security vaults, move password validation to a server-side app, Shopify app proxy, or external backend.”
+
+Do not hardcode the actual password in visible HTML if avoidable. However, for a theme-only MVP, use theme settings/blocks and data attributes carefully.
+
+The first game’s password and three-digit code should be editable in the Shopify theme editor through section block settings.
+
+Page copy:
+
+Eyebrow:
+“Locker”
+
+Heading:
+“Unlock your online evidence vault.”
+
+Intro:
+“Some of our games ask you to recover a password from the physical puzzle envelope. When you have it, choose your game below, enter the password, and open the next layer of the case.”
+
+Warning note:
+“Do not open locked envelopes early. The vault will tell you when it is time.”
+
+Search placeholder:
+“Search by game, case name, language, or code…”
+
+No results text:
+“No matching game locker found.”
+
+Default game card:
+
+Game title:
+“Final Whistle: Murder on the Konkan Line”
+
+Game description:
+“Recover Kabir Sawant’s database password from the six opening puzzles, then use it here to access the private case file.”
+
+Badges:
+“Crime investigation”
+“Football mystery”
+“Goa to Mumbai”
+“First case”
+
+Input label:
+“Enter database password”
+
+Input placeholder:
+“Type the password from your solved puzzles”
+
+Unlock button:
+“Unlock Vault”
+
+Error message:
+“Access denied. Check the password and try again.”
+
+Success heading:
+“Access granted: KONKAN / FINAL / PRIVATE”
+
+Success body:
+“Kabir’s private file is open. Read carefully. The next instruction tells you when to open the locked second envelope.”
+
+Three-digit code label:
+“Locked envelope code”
+
+Three-digit code placeholder text:
+“The code will appear here after the correct password is entered.”
+
+Post-unlock instruction:
+“Open the locked second envelope only after reaching this screen. Do not guess the lock.”
+
+Vault file headings:
+- “Detective’s note”
+- “Envelope code”
+- “Next instruction”
+
+Detective’s note copy:
+“If you are reading this, you found the password. Good. That means my backup system worked. The official version of Dev Naik’s death is too clean. Open the second envelope and look for what the public timeline leaves out.”
+
+Next instruction copy:
+“Use the three-digit code to open the locked envelope. Lay out every document before forming a theory.”
+
+====================================================
+PRODUCT PAGE
+====================================================
+
+Template:
+product.json
+Section:
+main-product
+
+Purpose:
+Standard product page, styled to match the brand.
+
+Requirements:
+- Product media gallery
+- Title
+- Price
+- Variant picker, especially Language
+- Quantity selector
+- Add to cart
+- Product description
+- Accordion tabs:
+  - What’s inside
+  - How to play
+  - Who it is for
+  - Shipping and returns
+  - Safety / fiction disclaimer
+
+Product page copy defaults if metafields are not set:
+
+What’s inside:
+“Inside the case, you will find story documents, puzzle materials, clue sheets, and instructions that guide you through the investigation. Some games may include locked stages or online vault access.”
+
+How to play:
+“Gather your group, read the opening instructions, solve the puzzles in order, and use your answers to unlock the next stage of the mystery.”
+
+Who it is for:
+“Best for people who enjoy escape rooms, murder mysteries, puzzle nights, detective stories, logic clues, codes, and collaborative games.”
+
+Shipping and returns:
+“Shipping timelines and return policies are shown at checkout and in the store policy pages.”
+
+Disclaimer:
+“All stories, characters, clubs, tournaments, locations, and incidents in this game are fictional unless clearly stated otherwise.”
+
+====================================================
+SEARCH PAGE
+====================================================
+
+Create a search page that works with Shopify storefront search.
+
+Requirements:
+- Search field
+- Display product, page, and article results
+- Empty state
+- No result state
+- Clean cards
+
+Search page copy:
+
+Heading:
+“Search {{ shop.name }}”
+
+Placeholder:
+“Search for games, hints, lockers, or products…”
+
+No results:
+“No results found. Try a different keyword.”
+
+Empty state:
+“Search for a game, hint page, product, or locker.”
+
+====================================================
+CART PAGE
+====================================================
+
+Create a simple cart page.
+
+Copy:
+
+Heading:
+“Your case file”
+
+Empty cart heading:
+“Your cart is empty.”
+
+Empty cart text:
+“The first mystery is waiting.”
+
+Continue shopping button:
+“Explore the First Case”
+
+Checkout button:
+“Proceed to Checkout”
+
+Update cart button:
+“Update Cart”
+
+====================================================
+THEME SETTINGS
+====================================================
+
+In config/settings_schema.json, include global settings:
+- Brand tagline
+- Announcement bar text
+- Primary button label
+- First product URL
+- Contact email optional
+- Social links optional
+- Color settings if reasonable
+
+Default announcement bar text:
+“First case coming soon: Final Whistle — Murder on the Konkan Line.”
+
+====================================================
+SECTION SETTINGS AND BLOCKS
+====================================================
+
+featured-case-product section:
+Settings:
+- selected_product: product picker
+- main_image: image picker fallback
+- collage_image_1 to collage_image_6: image pickers
+- eyebrow
+- heading
+- tagline
+- body text
+- button label
+
+hints-directory section:
+Settings:
+- page eyebrow
+- page heading
+- intro text
+
+Blocks:
+hint_game
+Fields:
+- game_title
+- game_handle
+- game_description
+- game_status
+- keywords
+- language
+- difficulty
+- puzzle_group_title
+- hint_1
+- hint_2
+- hint_3
+- answer_text optional, hidden behind “Reveal answer” button
+
+locker-directory section:
+Settings:
+- page eyebrow
+- page heading
+- intro text
+- warning note
+
+Blocks:
+locker_game
+Fields:
+- game_title
+- game_handle
+- game_description
+- language
+- difficulty
+- keywords
+- vault_password
+- envelope_code
+- success_heading
+- detective_note
+- next_instruction
+
+Important:
+In the locker section, make it easy for the store owner to add more games later without editing code.
+
+====================================================
+JAVASCRIPT REQUIREMENTS
+====================================================
+
+In assets/theme.js, implement:
+1. Mobile menu open/close
+2. Accessible Game dropdown open/close
+3. Hints directory client-side search filtering
+4. Locker directory client-side search filtering
+5. Locker unlock interaction:
+   - Normalize input by trimming whitespace
+   - Optionally case-insensitive comparison
+   - Show error if wrong
+   - Reveal success panel if correct
+   - Do not reveal success panel by default
+6. Reveal answer buttons for hint accordions
+7. Smooth scroll for homepage “How It Works” button
+
+====================================================
+CSS REQUIREMENTS
+====================================================
+
+In assets/theme.css, include:
+- Reset/base styles
+- Typography
+- Header
+- Footer
+- Buttons
+- Cards
+- Product section
+- Image collage
+- Contact form
+- About page
+- Hints directory
+- Locker directory
+- Product page
+- Cart page
+- Search page
+- Responsive breakpoints
+- Focus states
+- Reduced motion support using prefers-reduced-motion
+
+====================================================
+FINAL OUTPUT REQUIREMENTS
+====================================================
+
+Generate all files with working Liquid, JSON, CSS, and JS.
+
+The theme should be installable as a Shopify custom theme.
+
+Do not leave broken references.
+
+Use Shopify best practices:
+- Use {{ routes.root_url }}, {{ routes.cart_url }}, {{ routes.search_url }} where appropriate instead of hardcoded URLs when possible.
+- Use Shopify product form for add to cart.
+- Use Shopify contact form.
+- Use image_url filters for images.
+- Do not bypass Shopify checkout.
+- Keep the store owner able to edit major text and images from the theme editor.
+
+After generating, explain:
+1. Which Shopify pages I need to create in Admin
+2. Which templates to assign to those pages
+3. How to create the first product and language variants
+4. How to set the locker password and envelope code in the theme editor

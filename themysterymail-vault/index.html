@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vault — The Mystery Mail</title>
+    <link rel="icon" href="images/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/vault.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__row">
+        <a class="site-logo" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">
+          <img class="site-logo__img" src="images/logo.png" width="220" height="48" alt="The Mystery Mail" />
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Shop</a>
+          <a href="index.html" class="is-active">Vault</a>
+          <a class="btn-nav" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Order a case</a>
+        </nav>
+      </div>
+      <div class="site-strip"><span>Themysterymail Vault — player access</span></div>
+    </header>
+
+    <div class="site-main">
+      <div class="vault-shell">
+        <div class="vault-card">
+          <div class="vault-brand">
+            <h1>Themysterymail Vault</h1>
+            <p>Authorized access only. Use the username from your envelope.</p>
+          </div>
+          <form id="username-form" novalidate>
+            <label for="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              spellcheck="false"
+              placeholder="Enter envelope username"
+              required
+            />
+            <button type="submit" class="btn">Continue</button>
+            <p id="msg" class="msg error" role="alert"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>Bring the mystery home.</p>
+        <div class="site-footer__links">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">themysterymail.com</a>
+          <a href="index.html">Vault home</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/vault-core.js"></script>
+    <script>
+      (async function () {
+        const form = document.getElementById("username-form");
+        const msg = document.getElementById("msg");
+        let data;
+        try {
+          data = await loadGames();
+        } catch (e) {
+          msg.textContent =
+            "Could not load configuration. Serve this folder over HTTP (e.g. npx serve) or deploy to Netlify.";
+          form.querySelector("button").disabled = true;
+          return;
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          msg.textContent = "";
+          const raw = document.getElementById("username").value;
+          const want = raw.trim().toUpperCase();
+          if (!want) {
+            msg.textContent = "Enter your username.";
+            return;
+          }
+          const game = (data.games || []).find(
+            (g) => String(g.username || "").trim().toUpperCase() === want
+          );
+          if (!game) {
+            msg.textContent = "Unknown username. Check your envelope and try again.";
+            return;
+          }
+          setUserGate(game.id);
+          window.location.href = "password.html?game=" + encodeURIComponent(game.id);
+        });
+      })();
+    </script>
+  </body>
+</html>

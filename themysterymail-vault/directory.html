@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Evidence vault — The Mystery Mail</title>
+    <link rel="icon" href="images/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/vault.css" />
+  </head>
+  <body class="page-directory">
+    <header class="site-header">
+      <div class="site-header__row">
+        <a class="site-logo" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">
+          <img class="site-logo__img" src="images/logo.png" width="220" height="48" alt="The Mystery Mail" />
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Shop</a>
+          <a href="index.html">Vault</a>
+          <a class="btn-nav" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Order a case</a>
+        </nav>
+      </div>
+      <div class="site-strip"><span>Themysterymail Vault — player access</span></div>
+    </header>
+
+    <div class="site-main">
+      <div class="directory-frame">
+        <div class="desktop" id="app">
+          <header class="win-titlebar">
+            <span class="icon" aria-hidden="true"></span>
+            <span class="title" id="win-title">Kabir's Digital Directory</span>
+            <div class="win-btns" aria-hidden="true">
+              <button type="button" class="min" tabindex="-1"></button>
+              <button type="button" class="max" tabindex="-1"></button>
+              <button type="button" class="close" tabindex="-1"></button>
+            </div>
+          </header>
+          <div class="explorer-body">
+            <aside class="explorer-sidebar">
+              <div class="tree-label">Folders</div>
+              <div class="tree-item active" id="tree-root">Kabir's Digital Directory</div>
+            </aside>
+            <main class="explorer-main">
+              <div class="explorer-toolbar" id="toolbar">Kabir's Digital Directory</div>
+              <div id="file-list"></div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal" class="modal-overlay" hidden>
+      <div class="modal-notepad" role="dialog" aria-modal="true" aria-labelledby="np-name">
+        <div class="np-titlebar">
+          <span id="np-name">Case File Envelope.txt</span>
+          <button type="button" class="np-close" id="np-close" aria-label="Close">×</button>
+        </div>
+        <textarea id="np-body" readonly></textarea>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>Bring the mystery home.</p>
+        <div class="site-footer__links">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">themysterymail.com</a>
+          <a href="index.html">Vault home</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/vault-core.js"></script>
+    <script>
+      (async function () {
+        const params = new URLSearchParams(window.location.search);
+        const gameId = params.get("game");
+        if (!gameId || getUserGate() !== gameId || !isPasswordUnlocked(gameId)) {
+          window.location.href = "index.html";
+          return;
+        }
+
+        let data;
+        try {
+          data = await loadGames();
+        } catch (e) {
+          document.getElementById("toolbar").textContent = "Error loading vault data.";
+          return;
+        }
+        const game = (data.games || []).find((g) => g.id === gameId);
+        if (!game) {
+          window.location.href = "index.html";
+          return;
+        }
+
+        const rootLabel = game.directoryRootLabel || "Kabir's Digital Directory";
+        document.getElementById("win-title").textContent = rootLabel;
+        document.getElementById("toolbar").textContent = rootLabel;
+        document.getElementById("tree-root").textContent = rootLabel;
+
+        const list = document.getElementById("file-list");
+        const files = game.files || [];
+        files.forEach(function (file) {
+          const row = document.createElement("div");
+          row.className = "file-row";
+          row.setAttribute("role", "button");
+          row.setAttribute("tabindex", "0");
+          row.innerHTML =
+            '<span class="file-icon">TXT</span><span>' +
+            escapeHtml(file.name) +
+            "</span>";
+          function openFile() {
+            document.getElementById("np-name").textContent = file.name;
+            document.getElementById("np-body").value = file.content || "";
+            document.getElementById("modal").hidden = false;
+            document.getElementById("np-close").focus();
+          }
+          row.addEventListener("click", openFile);
+          row.addEventListener("keydown", function (ev) {
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              openFile();
+            }
+          });
+          list.appendChild(row);
+        });
+
+        document.getElementById("np-close").addEventListener("click", function () {
+          document.getElementById("modal").hidden = true;
+        });
+        document.getElementById("modal").addEventListener("click", function (ev) {
+          if (ev.target.id === "modal") document.getElementById("modal").hidden = true;
+        });
+
+        function escapeHtml(s) {
+          const d = document.createElement("div");
+          d.textContent = s;
+          return d.innerHTML;
+        }
+      })();
+    </script>
+  </body>
+</html>
