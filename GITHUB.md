@@ -12,6 +12,8 @@ This folder is its **own** Git repository (separate from any repo in parent fold
 
 ## 2. Connect and push (run in this folder)
 
+**Always run Git from this folder** (`Desktop/Puzzles/Website`) so you use this repo’s `.git`, not any other Git repo on your machine.
+
 Replace `YOUR_USER` and `YOUR_REPO` with your GitHub username and repo name.
 
 ```bash
@@ -19,6 +21,13 @@ cd /Users/arayjadhav/Desktop/Puzzles/Website
 git remote add origin https://github.com/YOUR_USER/YOUR_REPO.git
 git branch -M main
 git push -u origin main
+```
+
+Set your real identity for commits (once per machine, or only in this repo):
+
+```bash
+git config user.name "Your Name"
+git config user.email "you@example.com"
 ```
 
 If GitHub shows **SSH** instead:
