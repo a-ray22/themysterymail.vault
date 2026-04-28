@@ -14,14 +14,26 @@ This folder is its **own** Git repository (separate from any repo in parent fold
 
 **Always run Git from this folder** (`Desktop/Puzzles/Website`) so you use this repo’s `.git`, not any other Git repo on your machine.
 
-Replace `YOUR_USER` and `YOUR_REPO` with your GitHub username and repo name.
+Your live repo: **[github.com/a-ray22/themysterymail.vault](https://github.com/a-ray22/themysterymail.vault)**  
+Clone URL: `https://github.com/a-ray22/themysterymail.vault.git`
+
+If `origin` is not set yet:
 
 ```bash
 cd /Users/arayjadhav/Desktop/Puzzles/Website
-git remote add origin https://github.com/YOUR_USER/YOUR_REPO.git
+git remote add origin https://github.com/a-ray22/themysterymail.vault.git
 git branch -M main
 git push -u origin main
 ```
+
+If `origin` already exists, only push:
+
+```bash
+cd /Users/arayjadhav/Desktop/Puzzles/Website
+git push -u origin main
+```
+
+GitHub does **not** accept account passwords for `git push`. Use a **[personal access token](https://github.com/settings/tokens)** (HTTPS) or **SSH keys**.
 
 Set your real identity for commits (once per machine, or only in this repo):
 
