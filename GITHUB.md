@@ -17,6 +17,29 @@ This folder is its **own** Git repository (separate from any repo in parent fold
 Your live repo: **[github.com/a-ray22/themysterymail.vault](https://github.com/a-ray22/themysterymail.vault)**  
 Clone URL: `https://github.com/a-ray22/themysterymail.vault.git`
 
+## Where is the live website?
+
+GitHub **stores your code**; it does **not** show the vault as a playable site until **Pages** (or another host) is turned on.
+
+| What you see now | URL |
+|------------------|-----|
+| Source files in the repo | [github.com/a-ray22/themysterymail.vault/tree/main/themysterymail-vault](https://github.com/a-ray22/themysterymail.vault/tree/main/themysterymail-vault) |
+
+This repo includes **GitHub Actions** (`.github/workflows/deploy-pages.yml`) to publish the **`themysterymail-vault/`** folder to **GitHub Pages**.
+
+### Turn on GitHub Pages (once)
+
+1. Open the repo → **Settings** → **Pages** (left sidebar).
+2. Under **Build and deployment** → **Source**, choose **GitHub Actions** (not “Deploy from a branch”).
+3. Push any change to `main` (or merge the workflow if it is not on `main` yet). The **Actions** tab should show a green **Deploy GitHub Pages** run.
+4. After it succeeds, **Pages** will show your site URL. For a user project site it is usually:
+
+   **`https://a-ray22.github.io/themysterymail.vault/`**
+
+   (Exact URL is also on the workflow run summary and on the Pages settings screen.)
+
+If the first run asks you to **approve** workflow permissions for `GITHUB_TOKEN`, approve it.
+
 If `origin` is not set yet:
 
 ```bash
