@@ -682,6 +682,28 @@ input[type="text"]::placeholder {
   text-align: center;
 }
 
+.letter-actions {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.btn-download-img {
+  width: auto;
+  max-width: 100%;
+  display: inline-flex;
+  margin-top: 0;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.letter-actions__hint {
+  margin: 0.65rem auto 0;
+  font-size: 0.78rem;
+  color: var(--tmm-muted);
+  line-height: 1.45;
+  max-width: 26rem;
+}
+
 .btn-decode {
   margin-top: 0;
   box-shadow: 0 4px 20px rgba(125, 34, 34, 0.25);

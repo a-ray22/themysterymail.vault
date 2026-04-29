@@ -61,6 +61,17 @@
             </div>
           </div>
 
+          <div id="letter-actions" class="letter-actions" hidden>
+            <a
+              class="btn btn-outline btn-download-img"
+              href="images/case-1-vault-2/final-letter.png"
+              download="The-Mystery-Mail-Case-1-Final-Letter.png"
+            >
+              Download image
+            </a>
+            <p class="letter-actions__hint">Save the file to zoom in and read closely. On some phones, use “Download” then open from Files / Photos.</p>
+          </div>
+
           <a class="back" href="index.html">← Vault home</a>
         </div>
       </div>
@@ -108,7 +119,12 @@
         const decodeBtn = document.getElementById("decode-btn");
         const letterPack = document.getElementById("letter-pack");
         const letterInner = document.getElementById("letter-inner");
+        const letterActions = document.getElementById("letter-actions");
         const unlockBtn = document.getElementById("unlock-btn");
+
+        function showLetterDownload() {
+          letterActions.hidden = false;
+        }
 
         const inputs = [];
         for (let i = 0; i < 4; i++) {
@@ -163,6 +179,7 @@
           decodeWrap.hidden = true;
           msg.textContent = "";
           msg.classList.remove("error");
+          showLetterDownload();
         }
 
         function runLetterReveal() {
@@ -175,6 +192,7 @@
             letterInner.classList.remove("letter-pack__inner--revealing");
             letterInner.classList.add("letter-pack__inner--done");
             sessionStorage.setItem(STORAGE_LETTER, "1");
+            showLetterDownload();
           }, 1700);
         }
 
