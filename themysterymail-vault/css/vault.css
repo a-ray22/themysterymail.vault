@@ -634,24 +634,6 @@ input[type="text"]::placeholder {
   line-height: 1;
 }
 
-/* —— Vault home: secondary entry —— */
-.vault-alt-entry {
-  text-align: center;
-  font-size: 0.85rem;
-  margin: 0.75rem 0 0;
-  line-height: 1.45;
-}
-
-.vault-alt-entry a {
-  font-weight: 600;
-  color: var(--tmm-maroon);
-}
-
-.vault-alt-entry__meta {
-  color: var(--tmm-muted);
-  font-weight: 400;
-}
-
 /* —— Case 1 (Vault 2): numeric grid & letter reveal —— */
 .page-vault-2 input.numeric-cell,
 .page-vault-2 input[type="text"].numeric-cell {

@@ -2,7 +2,7 @@
 
 Visual styling matches **[themysterymail.com](https://www.themysterymail.com)** (warm cream background `#fdfcf7`, ink text `#1a1b29`, maroon accent `#7d2222`, Wix export palette). The header uses your brand assets in **`images/logo.png`** and **`images/favicon.png`** (copied from the project `Images/` folder — replace those files if the logo updates). Header links to the main shop; **Vault** stays on this player flow.
 
-**Case 1 (Vault 2)** (`case-1-vault-2.html`): linked from the vault home — four **numeric-only** cells (two digits max each), then **Decode letter** with a short reveal animation. Put images for that beat in **`images/case-1-vault-2/`** (see `images/README.txt` for the folder convention).
+**Case 1 (Vault 2)** (`case-1-vault-2.html`): **not** linked from the vault home — players reach it via **QR on the physical puzzle** (or the direct URL you print). Four **numeric-only** cells (two digits max each), then **Decode letter** with a short reveal animation. Images: **`images/case-1-vault-2/`** (see `images/README.txt`).
 
 Static vault flow for envelope games:
 

@@ -19,6 +19,7 @@ Main flow (envelope username → multi-cell password → fake "Windows" director
 
 Extra standalone flow (Case 1, second beat — numeric only → "Decode letter" + image):
   - themysterymail-vault/case-1-vault-2.html
+  - Not linked from index.html — intended access: QR on physical puzzle (or direct URL only).
   - Images per beat: themysterymail-vault/images/<case-slug>/ (see images/README.txt)
 
 GitHub repo (source): https://github.com/a-ray22/themysterymail.vault
