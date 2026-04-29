@@ -1,0 +1,54 @@
+THE MYSTERY MAIL — VAULT WEBSITE (PROJECT CONTEXT)
+====================================================
+Last updated for: ongoing development / AI & human handoff
+
+WHAT THIS PROJECT IS
+---------------------
+This repository powers "The Mystery Mail Vault" — a small static player-facing site
+for physical mystery-mail / envelope games sold via the main Wix store
+(themysterymail.com). It is separate from the Wix storefront: code lives here,
+deployed to GitHub Pages (and optionally a subdomain like vault.themysterymail.com).
+
+The playable site files live in: themysterymail-vault/
+
+Main flow (envelope username → multi-cell password → fake "Windows" directory with .txt):
+  - themysterymail-vault/index.html
+  - themysterymail-vault/password.html?game=<id>
+  - themysterymail-vault/directory.html?game=<id>
+  - Game definitions: themysterymail-vault/data/games.json
+
+Extra standalone flow (Case 1, second beat — numeric only → "Decode letter" + image):
+  - themysterymail-vault/case-1-vault-2.html
+  - Images per beat: themysterymail-vault/images/<case-slug>/ (see images/README.txt)
+
+GitHub repo (source): https://github.com/a-ray22/themysterymail.vault
+
+PUBLIC LINKS (default GitHub Pages — replace if you use a custom domain)
+--------------------------------------------------------------------------
+Site home (vault landing):
+  https://a-ray22.github.io/themysterymail.vault/
+
+Case 1 (Vault 2) — numeric code + letter reveal:
+  https://a-ray22.github.io/themysterymail.vault/case-1-vault-2.html
+
+If you connected a subdomain on Wix DNS (example):
+  https://vault.themysterymail.com/
+  https://vault.themysterymail.com/case-1-vault-2.html
+
+ONGOING WORK — GAMES WILL KEEP BEING ADDED
+--------------------------------------------
+The owner will add more cases / vault beats over time. Context should stay in:
+
+  1) This file (high-level intent + URLs)
+  2) themysterymail-vault/README.md (how the vault works, JSON fields)
+  3) themysterymail-vault/data/games.json (per-game usernames, passwords, directory files)
+  4) New HTML pages + images/ folders as new beats need different mechanics
+
+When continuing in chat or in Cursor: read this file first, then README + games.json,
+then the specific HTML/JS touched by the new feature.
+
+Notes
+-----
+- Client-side checks only — fine for atmosphere, not for real secrets.
+- GitHub Actions publishes only the themysterymail-vault/ folder to Pages.
+- Do not commit secrets (tokens); token.txt should stay gitignored if present.
