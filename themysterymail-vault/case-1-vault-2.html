@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Case 1 (Vault 2) — The Mystery Mail</title>
+    <link rel="icon" href="images/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/vault.css" />
+  </head>
+  <body class="page-vault-2">
+    <header class="site-header">
+      <div class="site-header__row">
+        <a class="site-logo" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">
+          <img class="site-logo__img" src="images/logo.png" width="220" height="48" alt="The Mystery Mail" />
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Shop</a>
+          <a href="index.html">Vault</a>
+          <a class="btn-nav" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Order a case</a>
+        </nav>
+      </div>
+      <div class="site-strip"><span>The Mystery Mail Vault — player access</span></div>
+    </header>
+
+    <div class="site-main">
+      <div class="vault-shell">
+        <div class="vault-card vault-card--wide">
+          <div class="vault-brand">
+            <h1>Case 1 (Vault 2)</h1>
+            <p>Enter the four-part numeric code. Digits only — two characters per box.</p>
+          </div>
+
+          <form id="code-form" novalidate>
+            <span class="sr-only" id="code-legend">Four boxes, digits only, up to two per box</span>
+            <div id="numeric-grid" class="numeric-grid" role="group" aria-labelledby="code-legend"></div>
+            <p class="hint">Numbers only (0–9). Single-digit answers can be entered as <strong>04</strong> or <strong>4</strong>.</p>
+            <button type="submit" class="btn" id="unlock-btn">Unlock</button>
+            <p id="msg" class="msg error" role="alert"></p>
+          </form>
+
+          <div id="decode-wrap" class="decode-wrap" hidden>
+            <button type="button" class="btn btn-decode" id="decode-btn">Decode letter</button>
+          </div>
+
+          <div id="letter-pack" class="letter-pack" hidden>
+            <div class="letter-pack__chrome" aria-hidden="true">
+              <span class="letter-pack__label">Final letter</span>
+            </div>
+            <div class="letter-pack__inner" id="letter-inner">
+              <img
+                src="images/case-1-vault-2/final-letter.png"
+                alt="Handwritten final letter in the case narrative."
+                decoding="async"
+              />
+            </div>
+          </div>
+
+          <a class="back" href="index.html">← Vault home</a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>Bring the mystery home.</p>
+        <div class="site-footer__links">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">themysterymail.com</a>
+          <a href="index.html">Vault home</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (function () {
+        const STORAGE_CODE = "tmv_case1_vault2_code";
+        const STORAGE_LETTER = "tmv_case1_vault2_letter";
+        const STORAGE_VALS = "tmv_case1_vault2_vals";
+        const EXPECTED = ["49", "11", "4", "7"];
+
+        function normalizeNumericCell(s) {
+          const digits = String(s || "").replace(/\D/g, "");
+          if (digits === "") return null;
+          const n = parseInt(digits, 10);
+          if (!Number.isFinite(n) || n < 0 || n > 99) return null;
+          return String(n);
+        }
+
+        function cellsMatchCode(inputs) {
+          if (inputs.length !== EXPECTED.length) return false;
+          for (let i = 0; i < EXPECTED.length; i++) {
+            const want = normalizeNumericCell(EXPECTED[i]);
+            const got = normalizeNumericCell(inputs[i].value);
+            if (want === null || got === null || want !== got) return false;
+          }
+          return true;
+        }
+
+        const form = document.getElementById("code-form");
+        const msg = document.getElementById("msg");
+        const grid = document.getElementById("numeric-grid");
+        const decodeWrap = document.getElementById("decode-wrap");
+        const decodeBtn = document.getElementById("decode-btn");
+        const letterPack = document.getElementById("letter-pack");
+        const letterInner = document.getElementById("letter-inner");
+        const unlockBtn = document.getElementById("unlock-btn");
+
+        const inputs = [];
+        for (let i = 0; i < 4; i++) {
+          const inp = document.createElement("input");
+          inp.type = "text";
+          inp.setAttribute("inputmode", "numeric");
+          inp.setAttribute("pattern", "[0-9]*");
+          inp.setAttribute("maxlength", "2");
+          inp.setAttribute("autocomplete", "off");
+          inp.setAttribute("aria-label", "Digits " + (i + 1) + " of 4");
+          inp.className = "numeric-cell";
+          inp.addEventListener("input", function () {
+            inp.value = inp.value.replace(/\D/g, "").slice(0, 2);
+            if (inp.value.length >= 2 && i < 3) inputs[i + 1].focus();
+          });
+          inp.addEventListener("keydown", function (ev) {
+            if (ev.key === "Backspace" && inp.value === "" && i > 0) inputs[i - 1].focus();
+          });
+          grid.appendChild(inp);
+          inputs.push(inp);
+        }
+
+        function applySavedDigits() {
+          const saved = sessionStorage.getItem(STORAGE_VALS);
+          if (!saved) return;
+          saved.split(",").forEach(function (v, i) {
+            if (inputs[i]) inputs[i].value = v;
+          });
+        }
+
+        function lockFormAfterSuccess() {
+          form.querySelectorAll("input").forEach(function (el) {
+            el.readOnly = true;
+          });
+          unlockBtn.disabled = true;
+        }
+
+        function showDecodePhase() {
+          sessionStorage.setItem(STORAGE_CODE, "1");
+          sessionStorage.setItem(STORAGE_VALS, inputs.map(function (el) { return el.value; }).join(","));
+          lockFormAfterSuccess();
+          decodeWrap.hidden = false;
+          msg.textContent = "";
+          msg.classList.remove("error");
+          msg.classList.add("ok");
+          msg.textContent = "Code accepted.";
+        }
+
+        function showLetterStatic() {
+          letterPack.hidden = false;
+          letterInner.classList.add("letter-pack__inner--static");
+          decodeWrap.hidden = true;
+          msg.textContent = "";
+          msg.classList.remove("error");
+        }
+
+        function runLetterReveal() {
+          decodeBtn.disabled = true;
+          letterPack.hidden = false;
+          letterInner.classList.remove("letter-pack__inner--static");
+          void letterInner.offsetWidth;
+          letterInner.classList.add("letter-pack__inner--revealing");
+          window.setTimeout(function () {
+            letterInner.classList.remove("letter-pack__inner--revealing");
+            letterInner.classList.add("letter-pack__inner--done");
+            sessionStorage.setItem(STORAGE_LETTER, "1");
+          }, 1700);
+        }
+
+        if (sessionStorage.getItem(STORAGE_LETTER) === "1") {
+          applySavedDigits();
+          lockFormAfterSuccess();
+          showLetterStatic();
+        } else if (sessionStorage.getItem(STORAGE_CODE) === "1") {
+          applySavedDigits();
+          lockFormAfterSuccess();
+          decodeWrap.hidden = false;
+          msg.classList.remove("error");
+          msg.classList.add("ok");
+          msg.textContent = "Code accepted.";
+        }
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          msg.classList.remove("ok");
+          msg.classList.add("error");
+          msg.textContent = "";
+          if (inputs.some(function (el) { return el.value.trim() === ""; })) {
+            msg.textContent = "Fill all four boxes.";
+            return;
+          }
+          if (!cellsMatchCode(inputs)) {
+            msg.textContent = "Incorrect code. Digits only; check each part.";
+            return;
+          }
+          showDecodePhase();
+        });
+
+        decodeBtn.addEventListener("click", function () {
+          runLetterReveal();
+        });
+      })();
+    </script>
+  </body>
+</html>
