@@ -10,7 +10,7 @@
       "files": [
         {
           "name": "Case File Envelope.txt",
-          "content": "CONFIDENTIAL — CASE FILE\n\nIf you are reading this, you have cleared the first gate.\n\nThe code to the second envelope is 223.\n\nDo not share this file. Lay out every document before opening the physical lock.\n\n— Kabir Sawant (digital copy)"
+          "content": "CONFIDENTIAL — CASE FILE\n\nIf you are reading this, you have cleared the first gate.\n\nThe code to the second envelope is:\n\n223\n\n(Use this code on the next envelope.)\n\nDo not share this file. Lay out every document before opening the physical lock.\n\n— Kabir Sawant (digital copy)"
         }
       ]
     }

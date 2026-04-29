@@ -60,7 +60,12 @@
           <span id="np-name">Case File Envelope.txt</span>
           <button type="button" class="np-close" id="np-close" aria-label="Close">×</button>
         </div>
-        <textarea id="np-body" readonly></textarea>
+        <div class="np-body-wrap">
+          <pre id="np-body" class="np-body" tabindex="0"></pre>
+        </div>
+        <p class="np-code-banner" id="np-code-banner" hidden>
+          Second envelope code: <span class="np-code-digits" aria-label="two two three">223</span>
+        </p>
       </div>
     </div>
 
@@ -102,8 +107,33 @@
         document.getElementById("toolbar").textContent = rootLabel;
         document.getElementById("tree-root").textContent = rootLabel;
 
+        function escapeHtml(s) {
+          const d = document.createElement("div");
+          d.textContent = s;
+          return d.innerHTML;
+        }
+
+        function fillNotepadBody(preEl, text) {
+          preEl.textContent = "";
+          const raw = text == null ? "" : String(text);
+          const marker = "223";
+          let i = 0;
+          let pos = raw.indexOf(marker);
+          while (pos !== -1) {
+            preEl.appendChild(document.createTextNode(raw.slice(i, pos)));
+            const em = document.createElement("strong");
+            em.className = "np-code-em";
+            em.textContent = marker;
+            preEl.appendChild(em);
+            i = pos + marker.length;
+            pos = raw.indexOf(marker, i);
+          }
+          preEl.appendChild(document.createTextNode(raw.slice(i)));
+        }
+
         const list = document.getElementById("file-list");
         const files = game.files || [];
+        const codeBanner = document.getElementById("np-code-banner");
         files.forEach(function (file) {
           const row = document.createElement("div");
           row.className = "file-row";
@@ -115,9 +145,12 @@
             "</span>";
           function openFile() {
             document.getElementById("np-name").textContent = file.name;
-            document.getElementById("np-body").value = file.content || "";
+            const body = document.getElementById("np-body");
+            fillNotepadBody(body, file.content || "");
+            const showBanner = (file.content || "").indexOf("223") !== -1;
+            codeBanner.hidden = !showBanner;
             document.getElementById("modal").hidden = false;
-            document.getElementById("np-close").focus();
+            body.focus();
           }
           row.addEventListener("click", openFile);
           row.addEventListener("keydown", function (ev) {
@@ -135,12 +168,6 @@
         document.getElementById("modal").addEventListener("click", function (ev) {
           if (ev.target.id === "modal") document.getElementById("modal").hidden = true;
         });
-
-        function escapeHtml(s) {
-          const d = document.createElement("div");
-          d.textContent = s;
-          return d.innerHTML;
-        }
       })();
     </script>
   </body>

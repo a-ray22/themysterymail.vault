@@ -519,23 +519,34 @@ input[type="text"]::placeholder {
   position: fixed;
   inset: 0;
   background: rgba(26, 27, 41, 0.45);
+  padding: 1rem;
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  z-index: 200;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-overlay[hidden] {
+  display: none !important;
 }
 
 .modal-notepad {
   width: min(100%, 520px);
+  max-width: 100%;
   background: #f0f0c8;
   border: 1px solid #8b8b6a;
   border-radius: 4px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: min(90vh, 640px);
 }
 
 .modal-notepad .np-titlebar {
+  flex-shrink: 0;
   background: #fff;
   padding: 0.35rem 0.6rem;
   font-size: 0.8rem;
@@ -546,16 +557,69 @@ input[type="text"]::placeholder {
   color: var(--tmm-ink);
 }
 
-.modal-notepad textarea {
-  width: 100%;
-  min-height: 220px;
-  border: none;
+.modal-notepad .np-body-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
   background: #f0f0c8;
-  font-family: Consolas, "Courier New", monospace;
-  font-size: 0.9rem;
-  padding: 0.75rem;
-  resize: vertical;
-  color: #1a1a1a;
+}
+
+.modal-notepad .np-body {
+  margin: 0;
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  background: transparent;
+  font-family: Consolas, "Courier New", ui-monospace, monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 0.85rem 0.9rem;
+  color: #0d0d0d;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.modal-notepad .np-body:focus {
+  outline: none;
+}
+
+.modal-notepad .np-body:focus-visible {
+  outline: 2px solid var(--tmm-focus);
+  outline-offset: -2px;
+}
+
+.modal-notepad .np-code-em {
+  font-weight: 800;
+  font-size: 1.15em;
+  color: var(--tmm-maroon);
+  letter-spacing: 0.12em;
+  background: rgba(125, 34, 34, 0.12);
+  padding: 0.05em 0.2em;
+  border-radius: 4px;
+}
+
+.modal-notepad .np-code-banner {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--tmm-ink);
+  background: linear-gradient(180deg, #f5e6e6 0%, #edd4d4 100%);
+  border-top: 2px solid var(--tmm-maroon);
+}
+
+.modal-notepad .np-code-digits {
+  display: inline-block;
+  font-family: Consolas, "Courier New", ui-monospace, monospace;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  color: var(--tmm-maroon);
+  margin-left: 0.15em;
 }
 
 .modal-notepad .np-close {
