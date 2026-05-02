@@ -1,10 +1,16 @@
-Final Whistle hint thumbnails live here:
+JPEGs for the hint page live here:
 
   themysterymail-vault/hints/case-1-final-whistle/assets/pages/
 
-The site references these JPEGs from `hints.html`. Extra print-only pages are omitted from the guide:
+`hints.html` references these paths. Extra print-only pages are **not** linked in the guide (no broken `<img>` tags for them):
 
-  - Escape room invite: `a5-stage-1-invtation-p3.jpg` and `p4` are not used.
-  - Riddle sheet: `a5-stage-1-riddle-p2.jpg` is not used.
+  - Escape room invite: only `a5-stage-1-invtation-p1.jpg` and `p2` (not p3/p4).
+  - Riddle sheet: only `a5-stage-1-riddle-p1.jpg` (not p2).
 
-To refresh assets, replace files in `assets/pages/` keeping the same names. Thumbnails are shown blurred on the hints page (identify the prop, not read text online).
+**Blur pipeline (regenerate after swapping masters):** from repo root,
+
+  for f in themysterymail-vault/hints/case-1-final-whistle/assets/pages/*.jpg; do
+    ffmpeg -y -hide_banner -loglevel error -i "$f" -vf "gblur=sigma=12" -q:v 6 "/tmp/h-blur.jpg" && mv "/tmp/h-blur.jpg" "$f"
+  done
+
+That overwrites each file with a blurred copy used on the site (high-res originals should be kept outside git if you need them for print).
