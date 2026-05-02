@@ -126,6 +126,21 @@
           letterActions.hidden = false;
         }
 
+        function clearNumericCellFeedback() {
+          inputs.forEach(function (el) {
+            el.classList.remove("pass-cell--ok", "pass-cell--bad");
+          });
+          msg.textContent = "";
+          msg.classList.remove("ok");
+          msg.classList.add("error");
+        }
+
+        function cellNumericMatch(expectedStr, inputEl) {
+          const want = normalizeNumericCell(expectedStr);
+          const got = normalizeNumericCell(inputEl.value);
+          return want !== null && got !== null && want === got;
+        }
+
         const inputs = [];
         for (let i = 0; i < 4; i++) {
           const inp = document.createElement("input");
@@ -137,6 +152,7 @@
           inp.setAttribute("aria-label", "Digits " + (i + 1) + " of 4");
           inp.className = "numeric-cell";
           inp.addEventListener("input", function () {
+            clearNumericCellFeedback();
             inp.value = inp.value.replace(/\D/g, "").slice(0, 2);
             if (inp.value.length >= 2 && i < 3) inputs[i + 1].focus();
           });
@@ -163,6 +179,9 @@
         }
 
         function showDecodePhase() {
+          inputs.forEach(function (el) {
+            el.classList.remove("pass-cell--ok", "pass-cell--bad");
+          });
           sessionStorage.setItem(STORAGE_CODE, "1");
           sessionStorage.setItem(STORAGE_VALS, inputs.map(function (el) { return el.value; }).join(","));
           lockFormAfterSuccess();
@@ -214,12 +233,34 @@
           msg.classList.remove("ok");
           msg.classList.add("error");
           msg.textContent = "";
+          inputs.forEach(function (el) {
+            el.classList.remove("pass-cell--ok", "pass-cell--bad");
+          });
           if (inputs.some(function (el) { return el.value.trim() === ""; })) {
             msg.textContent = "Fill all four boxes.";
             return;
           }
           if (!cellsMatchCode(inputs)) {
-            msg.textContent = "Incorrect code. Digits only; check each part.";
+            const wrongParts = [];
+            for (let i = 0; i < 4; i++) {
+              const ok = cellNumericMatch(EXPECTED[i], inputs[i]);
+              inputs[i].classList.toggle("pass-cell--ok", ok);
+              inputs[i].classList.toggle("pass-cell--bad", !ok);
+              if (!ok) wrongParts.push(i + 1);
+            }
+            if (wrongParts.length === 4) {
+              msg.textContent = "None of the parts match yet. Digits only; check each box.";
+            } else if (wrongParts.length === 1) {
+              msg.textContent =
+                "Box " +
+                wrongParts[0] +
+                " still needs the right code. Green boxes are correct.";
+            } else {
+              msg.textContent =
+                "Boxes " +
+                wrongParts.join(", ") +
+                " still need the right code. Green boxes are correct.";
+            }
             return;
           }
           showDecodePhase();

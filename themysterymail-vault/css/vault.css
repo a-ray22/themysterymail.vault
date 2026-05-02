@@ -333,6 +333,24 @@ input[type="text"]::placeholder {
   font-weight: 700;
   padding: 0.55rem 0.25rem;
   text-transform: uppercase;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.password-grid input.pass-cell--ok,
+.numeric-grid .numeric-cell.pass-cell--ok {
+  border-color: var(--tmm-success);
+  background: rgba(31, 107, 69, 0.1);
+  box-shadow: 0 0 0 1px rgba(31, 107, 69, 0.2);
+}
+
+.password-grid input.pass-cell--bad,
+.numeric-grid .numeric-cell.pass-cell--bad {
+  border-color: var(--tmm-error);
+  background: rgba(163, 32, 48, 0.07);
+  box-shadow: 0 0 0 1px rgba(163, 32, 48, 0.18);
 }
 
 .hint {
@@ -657,6 +675,10 @@ input[type="text"]::placeholder {
   font-weight: 700;
   letter-spacing: 0.02em;
   padding: 0.6rem 0.35rem;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .decode-wrap {
