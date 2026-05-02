@@ -32,6 +32,9 @@ Site home (vault landing):
 Case 1 (Vault 2) — numeric code + letter reveal:
   https://a-ray22.github.io/themysterymail.vault/case-1-vault-2.html
 
+Puzzle hints (progressive guides; add new games to hints.html over time):
+  https://a-ray22.github.io/themysterymail.vault/hints.html
+
 If you connected a subdomain on Wix DNS (example):
   https://vault.themysterymail.com/
   https://vault.themysterymail.com/case-1-vault-2.html

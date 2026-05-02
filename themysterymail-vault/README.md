@@ -4,6 +4,8 @@ Visual styling matches **[themysterymail.com](https://www.themysterymail.com)** 
 
 **Case 1 (Vault 2)** (`case-1-vault-2.html`): **not** linked from the vault home — players reach it via **QR on the physical puzzle** (or the direct URL you print). Four **numeric-only** cells (two digits max each), then **Decode letter** with a short reveal animation. Images: **`images/case-1-vault-2/`** (see `images/README.txt`).
 
+**Puzzle hints** (`hints.html`): hub for progressive, spoiler-layered hint guides. **Case 1 — Final Whistle** is the first section; add more games as new `<section>` blocks and link them from the hub list. Thumbnail JPEGs for Final Whistle go in **`hints/case-1-final-whistle/assets/pages/`** (see `hints/case-1-final-whistle/README-ASSETS.txt`). Styling: `css/hints.css` (vault header/footer + maroon/cream palette).
+
 Static vault flow for envelope games:
 
 1. **Landing** (`index.html`) — player enters the **username** printed in the envelope.
