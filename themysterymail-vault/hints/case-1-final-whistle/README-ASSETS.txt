@@ -2,10 +2,9 @@ Final Whistle hint thumbnails live here:
 
   themysterymail-vault/hints/case-1-final-whistle/assets/pages/
 
-Copy every .jpg from your packaged hint site folder:
+The site references these JPEGs from `hints.html`. Extra print-only pages are omitted from the guide:
 
-  final_whistle_simple_hint_site_full/assets/pages/
+  - Escape room invite: `a5-stage-1-invtation-p3.jpg` and `p4` are not used.
+  - Riddle sheet: `a5-stage-1-riddle-p2.jpg` is not used.
 
-into this `assets/pages/` directory (same filenames). Until then, hint cards will show broken images but the text hints still work.
-
-Reference: README_OPEN_ME.txt in the original zip — keep index beside assets in the source bundle; in this repo we only need the `pages/` images.
+To refresh assets, replace files in `assets/pages/` keeping the same names. Thumbnails are shown blurred on the hints page (identify the prop, not read text online).

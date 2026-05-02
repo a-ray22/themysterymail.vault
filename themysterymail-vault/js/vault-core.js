@@ -33,6 +33,18 @@ function getMaxCharsPerCell(game) {
   return 2;
 }
 
+/** Short hint under each password box, e.g. "2 characters" or "1 or 2 characters". */
+function getPassCellLengthHint(expectedSegment, maxCharsPerCell) {
+  let maxC = Number(maxCharsPerCell);
+  if (!Number.isFinite(maxC) || maxC < 1 || maxC > 8) maxC = 2;
+  const raw = String(expectedSegment ?? "").trim();
+  const n = raw.length;
+  if (maxC <= 1) return "1 character";
+  if (n >= 2) return String(Math.min(n, maxC)) + " characters";
+  if (n === 1) return "1 or " + maxC + " characters";
+  return "Up to " + maxC + " characters";
+}
+
 function checkPassword(game, segmentsFromInputs) {
   const expected = game.passwordSegments || [];
   const n = expected.length;

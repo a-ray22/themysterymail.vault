@@ -266,13 +266,27 @@
   overflow: hidden;
   scroll-snap-align: start;
   text-decoration: none;
+  cursor: default;
+  user-select: none;
 }
 
-.page-hints .shot img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+.page-hints .shot__inner {
   display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.page-hints .shot__inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: blur(5.5px);
+  transform: scale(1.14);
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 .page-hints details.help {
@@ -424,5 +438,10 @@
 @media (prefers-reduced-motion: reduce) {
   .page-hints .shots {
     scroll-snap-type: none;
+  }
+
+  .page-hints .shot__inner img {
+    filter: blur(3px);
+    transform: scale(1.08);
   }
 }
