@@ -25,7 +25,7 @@ Extra standalone flow (Case 1, second beat — numeric only → "Decode letter" 
 Extra standalone flow (Case 2 — QR audio transmission with speed + reverse tools):
   - themysterymail-vault/case-2-audio.html
   - Audio: themysterymail-vault/audio/case-2/transmission.mp3
-  - Player logic: themysterymail-vault/js/vault-audio.js (Web Audio API)
+  - Player logic: themysterymail-vault/js/vault-audio.js (dual hidden audio: forward + pre-reversed file)
   - Not linked from index.html — intended access: QR on physical puzzle (or direct URL only).
 
 GitHub repo (source): https://github.com/a-ray22/themysterymail.vault
