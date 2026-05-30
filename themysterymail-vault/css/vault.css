@@ -903,6 +903,14 @@ input[type="text"]::placeholder {
 }
 
 /* —— Case 2: audio lab (QR transmission page) —— */
+.audio-lab__native {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .audio-lab {
   margin-top: 0.5rem;
 }

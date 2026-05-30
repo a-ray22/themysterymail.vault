@@ -32,25 +32,33 @@
     const reverseBtn = root.querySelector("[data-audio-reverse]");
     const speedBtns = root.querySelectorAll("[data-audio-speed]");
 
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) {
-      if (statusEl) statusEl.textContent = "This browser cannot play advanced audio. Try a recent Chrome or Safari.";
-      return;
-    }
+    const audio = document.createElement("audio");
+    audio.className = "audio-lab__native";
+    audio.preload = "auto";
+    audio.playsInline = true;
+    audio.setAttribute("playsinline", "");
+    audio.setAttribute("webkit-playsinline", "");
+    audio.src = src;
+    root.appendChild(audio);
 
-    const ctx = new AudioCtx();
-    let buffer = null;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+
+    let ctx = null;
+    let decodedBuffer = null;
     let reversedBuffer = null;
-    let source = null;
-    let playing = false;
+    let arrayBufferCache = null;
+    let decodePromise = null;
+    let waSource = null;
     let reverse = false;
     let speed = 1;
     let duration = 0;
     let positionForward = 0;
+    let waPlaying = false;
     let playStartedAt = 0;
     let playStartPosition = 0;
     let rafId = 0;
     let seekDragging = false;
+    let nativeReady = false;
 
     function setStatus(text) {
       if (statusEl) statusEl.textContent = text;
@@ -62,10 +70,11 @@
       speedBtns.forEach(function (btn) {
         btn.disabled = !on;
       });
-      reverseBtn.disabled = !on;
+      reverseBtn.disabled = !on || !AudioCtx;
     }
 
     function updatePlayLabel() {
+      const playing = reverse ? waPlaying : !audio.paused;
       playBtn.textContent = playing ? "Pause" : "Play";
       playBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
     }
@@ -84,119 +93,220 @@
       });
     }
 
-    function currentForwardPosition() {
-      if (!playing) return positionForward;
-      const elapsed = (ctx.currentTime - playStartedAt) * speed;
-      if (reverse) return Math.max(0, playStartPosition - elapsed);
-      return Math.min(duration, playStartPosition + elapsed);
+    function unlockWebAudio() {
+      if (!AudioCtx) return;
+      if (!ctx) ctx = new AudioCtx();
+      if (ctx.state === "suspended") void ctx.resume();
     }
 
-    function syncTimeline() {
-      const pos = currentForwardPosition();
-      timeCurEl.textContent = formatTime(pos);
-      if (!seekDragging && duration > 0) {
-        seekEl.value = String(Math.round((pos / duration) * 1000));
-      }
+    function ensureReverseDecoded() {
+      if (reversedBuffer) return Promise.resolve();
+      if (!AudioCtx) return Promise.reject(new Error("no webaudio"));
+      if (decodePromise) return decodePromise;
+
+      unlockWebAudio();
+
+      decodePromise = Promise.resolve()
+        .then(function () {
+          if (!arrayBufferCache) {
+            return fetch(src).then(function (res) {
+              if (!res.ok) throw new Error("fetch failed");
+              return res.arrayBuffer();
+            });
+          }
+          return arrayBufferCache;
+        })
+        .then(function (arr) {
+          arrayBufferCache = arr;
+          if (decodedBuffer) return decodedBuffer;
+          return ctx.decodeAudioData(arr.slice(0));
+        })
+        .then(function (decoded) {
+          decodedBuffer = decoded;
+          reversedBuffer = reverseBuffer(ctx, decodedBuffer);
+          if (!duration) duration = decodedBuffer.duration;
+        });
+
+      return decodePromise;
     }
 
-    function tick() {
-      syncTimeline();
-      if (playing) rafId = window.requestAnimationFrame(tick);
-    }
-
-    function stopSource() {
-      if (source) {
+    function stopWaSource() {
+      if (waSource) {
         try {
-          source.stop();
+          waSource.stop();
         } catch (e) {
           /* already stopped */
         }
-        source.disconnect();
-        source = null;
+        waSource.disconnect();
+        waSource = null;
       }
-      playing = false;
-      updatePlayLabel();
+      waPlaying = false;
       if (rafId) {
         window.cancelAnimationFrame(rafId);
         rafId = 0;
       }
     }
 
-    function bufferOffsetForForwardPosition(pos) {
-      if (reverse) return Math.max(0, duration - pos);
-      return Math.max(0, Math.min(duration, pos));
+    function waForwardPosition() {
+      if (!waPlaying || !ctx) return positionForward;
+      const elapsed = (ctx.currentTime - playStartedAt) * speed;
+      return Math.max(0, playStartPosition - elapsed);
     }
 
-    async function ensureContextRunning() {
-      if (ctx.state === "suspended") await ctx.resume();
+    function getForwardPosition() {
+      if (reverse) return waPlaying ? waForwardPosition() : positionForward;
+      return audio.currentTime || 0;
     }
 
-    function playFromPosition(forwardPos) {
-      if (!buffer) return;
-      stopSource();
+    function syncTimeline() {
+      const pos = getForwardPosition();
+      timeCurEl.textContent = formatTime(pos);
+      if (!seekDragging && duration > 0) {
+        seekEl.value = String(Math.round((pos / duration) * 1000));
+      }
+    }
+
+    function tickWa() {
+      syncTimeline();
+      if (waPlaying) rafId = window.requestAnimationFrame(tickWa);
+    }
+
+    function playWaFrom(forwardPos) {
+      if (!reversedBuffer || !ctx) return;
+      stopWaSource();
       positionForward = Math.max(0, Math.min(duration, forwardPos));
-      void ensureContextRunning().then(function () {
-        source = ctx.createBufferSource();
-        source.buffer = reverse ? reversedBuffer : buffer;
-        source.playbackRate.value = speed;
-        source.connect(ctx.destination);
-        source.onended = function () {
-          playing = false;
-          positionForward = reverse ? 0 : duration;
+      const offset = Math.max(0, duration - positionForward);
+      if (offset >= duration - 0.02) {
+        positionForward = 0;
+        syncTimeline();
+        updatePlayLabel();
+        return;
+      }
+
+      waSource = ctx.createBufferSource();
+      waSource.buffer = reversedBuffer;
+      waSource.playbackRate.value = speed;
+      waSource.connect(ctx.destination);
+      waSource.onended = function () {
+        waPlaying = false;
+        positionForward = 0;
+        updatePlayLabel();
+        syncTimeline();
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+      };
+      waSource.start(0, offset);
+      playStartedAt = ctx.currentTime;
+      playStartPosition = positionForward;
+      waPlaying = true;
+      updatePlayLabel();
+      rafId = window.requestAnimationFrame(tickWa);
+    }
+
+    function pauseAll() {
+      if (reverse) {
+        if (waPlaying) {
+          positionForward = waForwardPosition();
+          stopWaSource();
           updatePlayLabel();
           syncTimeline();
-          if (rafId) {
-            window.cancelAnimationFrame(rafId);
-            rafId = 0;
-          }
-        };
-        const offset = bufferOffsetForForwardPosition(positionForward);
-        if (offset >= duration - 0.02) {
-          positionForward = reverse ? 0 : duration;
-          syncTimeline();
-          return;
         }
-        source.start(0, offset);
-        playStartedAt = ctx.currentTime;
-        playStartPosition = positionForward;
-        playing = true;
-        updatePlayLabel();
-        rafId = window.requestAnimationFrame(tick);
-      });
+        return;
+      }
+      audio.pause();
+    }
+
+    function playForwardFrom(forwardPos) {
+      positionForward = Math.max(0, Math.min(duration, forwardPos));
+      audio.currentTime = positionForward;
+      audio.playbackRate = speed;
+      const playAttempt = audio.play();
+      if (playAttempt && typeof playAttempt.catch === "function") {
+        playAttempt.catch(function () {
+          setStatus("Tap Play again to start audio on this device.");
+        });
+      }
     }
 
     function togglePlay() {
-      if (!buffer) return;
-      if (playing) {
-        positionForward = currentForwardPosition();
-        stopSource();
-        syncTimeline();
+      unlockWebAudio();
+
+      if (!nativeReady && !duration) return;
+
+      if (reverse) {
+        if (waPlaying) {
+          pauseAll();
+          return;
+        }
+        if (positionForward >= duration - 0.02) positionForward = duration;
+        if (positionForward <= 0.02) positionForward = duration;
+        setStatus("Preparing reverse…");
+        void ensureReverseDecoded()
+          .then(function () {
+            setStatus("");
+            playWaFrom(positionForward);
+          })
+          .catch(function () {
+            setStatus("Reverse playback is not available in this browser.");
+          });
         return;
       }
-      if (positionForward >= duration - 0.02 && !reverse) positionForward = 0;
-      if (positionForward <= 0.02 && reverse) positionForward = duration;
-      playFromPosition(positionForward);
+
+      if (!audio.paused) {
+        audio.pause();
+        return;
+      }
+
+      if (audio.currentTime >= duration - 0.02) audio.currentTime = 0;
+      playForwardFrom(audio.currentTime);
     }
 
     function setSpeed(nextSpeed) {
       speed = nextSpeed;
       updateSpeedUi();
-      if (playing) {
-        const pos = currentForwardPosition();
-        playFromPosition(pos);
+      if (reverse) {
+        if (waPlaying) playWaFrom(waForwardPosition());
+        return;
       }
+      audio.playbackRate = speed;
     }
 
     function setReverse(nextReverse) {
       if (reverse === nextReverse) return;
-      const pos = playing ? currentForwardPosition() : positionForward;
+      unlockWebAudio();
+
+      const pos = getForwardPosition();
+      const wasPlaying = reverse ? waPlaying : !audio.paused;
+
+      if (reverse) stopWaSource();
+      else audio.pause();
+
       reverse = nextReverse;
       updateReverseUi();
-      if (playing) playFromPosition(pos);
-      else {
-        positionForward = pos;
-        syncTimeline();
+      positionForward = pos;
+
+      if (reverse) {
+        setStatus("Preparing reverse…");
+        void ensureReverseDecoded()
+          .then(function () {
+            setStatus("");
+            syncTimeline();
+            if (wasPlaying) playWaFrom(pos);
+          })
+          .catch(function () {
+            reverse = false;
+            updateReverseUi();
+            setStatus("Reverse playback is not available in this browser.");
+          });
+        return;
       }
+
+      audio.currentTime = pos;
+      audio.playbackRate = speed;
+      syncTimeline();
+      if (wasPlaying) playForwardFrom(pos);
     }
 
     playBtn.addEventListener("click", togglePlay);
@@ -211,22 +321,67 @@
 
     seekEl.addEventListener("change", function () {
       seekDragging = false;
-      if (!buffer || duration <= 0) return;
+      if (duration <= 0) return;
       const pos = (parseInt(seekEl.value, 10) / 1000) * duration;
       positionForward = pos;
-      if (playing) playFromPosition(pos);
-      else syncTimeline();
+      if (reverse) {
+        if (waPlaying) playWaFrom(pos);
+        else syncTimeline();
+        return;
+      }
+      audio.currentTime = pos;
+      syncTimeline();
     });
 
     reverseBtn.addEventListener("click", function () {
+      unlockWebAudio();
       setReverse(!reverse);
     });
 
     speedBtns.forEach(function (btn) {
       btn.addEventListener("click", function () {
+        unlockWebAudio();
         const rate = parseFloat(btn.getAttribute("data-audio-speed"), 10);
         if (Number.isFinite(rate)) setSpeed(rate);
       });
+    });
+
+    audio.addEventListener("loadedmetadata", function () {
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        duration = audio.duration;
+        timeDurEl.textContent = formatTime(duration);
+        seekEl.max = "1000";
+      }
+    });
+
+    audio.addEventListener("canplaythrough", function () {
+      nativeReady = true;
+      setControlsEnabled(true);
+      setStatus("");
+      syncTimeline();
+    });
+
+    audio.addEventListener("timeupdate", function () {
+      if (!reverse && !seekDragging) syncTimeline();
+    });
+
+    audio.addEventListener("play", function () {
+      if (!reverse) updatePlayLabel();
+    });
+
+    audio.addEventListener("pause", function () {
+      if (!reverse) updatePlayLabel();
+    });
+
+    audio.addEventListener("ended", function () {
+      if (!reverse) {
+        updatePlayLabel();
+        syncTimeline();
+      }
+    });
+
+    audio.addEventListener("error", function () {
+      setStatus("Could not load the recording. Check your connection and refresh.");
     });
 
     setControlsEnabled(false);
@@ -241,20 +396,10 @@
         return res.arrayBuffer();
       })
       .then(function (arr) {
-        return ctx.decodeAudioData(arr);
-      })
-      .then(function (decoded) {
-        buffer = decoded;
-        reversedBuffer = reverseBuffer(ctx, buffer);
-        duration = buffer.duration;
-        timeDurEl.textContent = formatTime(duration);
-        seekEl.max = "1000";
-        setControlsEnabled(true);
-        setStatus("");
-        syncTimeline();
+        arrayBufferCache = arr;
       })
       .catch(function () {
-        setStatus("Could not load the recording. Check your connection and refresh.");
+        /* native audio element may still load the file */
       });
   }
 
