@@ -22,6 +22,12 @@ Extra standalone flow (Case 1, second beat — numeric only → "Decode letter" 
   - Not linked from index.html — intended access: QR on physical puzzle (or direct URL only).
   - Images per beat: themysterymail-vault/images/<case-slug>/ (see images/README.txt)
 
+Extra standalone flow (Case 2 — QR audio transmission with speed + reverse tools):
+  - themysterymail-vault/case-2-audio.html
+  - Audio: themysterymail-vault/audio/case-2/transmission.mp3
+  - Player logic: themysterymail-vault/js/vault-audio.js (Web Audio API)
+  - Not linked from index.html — intended access: QR on physical puzzle (or direct URL only).
+
 GitHub repo (source): https://github.com/a-ray22/themysterymail.vault
 
 PUBLIC LINKS (default GitHub Pages — replace if you use a custom domain)
@@ -32,12 +38,16 @@ Site home (vault landing):
 Case 1 (Vault 2) — numeric code + letter reveal:
   https://a-ray22.github.io/themysterymail.vault/case-1-vault-2.html
 
+Case 2 — audio transmission (speed + reverse):
+  https://a-ray22.github.io/themysterymail.vault/case-2-audio.html
+
 Puzzle hints (progressive guides; add new games to hints.html over time):
   https://a-ray22.github.io/themysterymail.vault/hints.html
 
 If you connected a subdomain on Wix DNS (example):
   https://vault.themysterymail.com/
   https://vault.themysterymail.com/case-1-vault-2.html
+  https://vault.themysterymail.com/case-2-audio.html
 
 ONGOING WORK — GAMES WILL KEEP BEING ADDED
 --------------------------------------------

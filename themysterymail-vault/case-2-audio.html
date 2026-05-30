@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Case 2 — Transmission — The Mystery Mail</title>
+    <link rel="icon" href="images/favicon.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/vault.css" />
+  </head>
+  <body class="page-audio-lab">
+    <header class="site-header">
+      <div class="site-header__row">
+        <a class="site-logo" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">
+          <img class="site-logo__img" src="images/logo.png" width="220" height="48" alt="The Mystery Mail" />
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Shop</a>
+          <a href="index.html">Vault</a>
+          <a href="hints.html">Hints</a>
+          <a class="btn-nav" href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">Order a case</a>
+        </nav>
+      </div>
+      <div class="site-strip"><span>The Mystery Mail Vault — player access</span></div>
+    </header>
+
+    <div class="site-main">
+      <div class="vault-shell">
+        <div class="vault-card vault-card--wide">
+          <div class="vault-brand">
+            <h1>Case 2 — Transmission</h1>
+            <p>Listen to the recording below. Use the tools if you need to slow it down or play it in reverse.</p>
+          </div>
+
+          <div class="audio-lab" data-audio-lab data-src="audio/case-2/transmission.mp3">
+            <p class="audio-lab__status" data-audio-status aria-live="polite">Loading audio…</p>
+
+            <div class="audio-lab__panel">
+              <div class="audio-lab__transport">
+                <button type="button" class="btn audio-lab__play" data-audio-play disabled aria-label="Play">Play</button>
+                <div class="audio-lab__timeline">
+                  <span class="audio-lab__time" data-audio-time-cur aria-hidden="true">0:00</span>
+                  <input
+                    type="range"
+                    class="audio-lab__seek"
+                    data-audio-seek
+                    min="0"
+                    max="1000"
+                    value="0"
+                    disabled
+                    aria-label="Seek"
+                  />
+                  <span class="audio-lab__time" data-audio-time-dur aria-hidden="true">0:00</span>
+                </div>
+              </div>
+
+              <div class="audio-lab__tools">
+                <div class="audio-lab__group">
+                  <span class="audio-lab__label" id="speed-label">Speed</span>
+                  <div class="audio-lab__speeds" role="group" aria-labelledby="speed-label">
+                    <button type="button" class="audio-lab__speed" data-audio-speed="0.5" disabled aria-pressed="false">0.5×</button>
+                    <button type="button" class="audio-lab__speed" data-audio-speed="0.75" disabled aria-pressed="false">0.75×</button>
+                    <button type="button" class="audio-lab__speed audio-lab__speed--active" data-audio-speed="1" disabled aria-pressed="true">1×</button>
+                    <button type="button" class="audio-lab__speed" data-audio-speed="1.25" disabled aria-pressed="false">1.25×</button>
+                    <button type="button" class="audio-lab__speed" data-audio-speed="1.5" disabled aria-pressed="false">1.5×</button>
+                    <button type="button" class="audio-lab__speed" data-audio-speed="2" disabled aria-pressed="false">2×</button>
+                  </div>
+                </div>
+
+                <div class="audio-lab__group audio-lab__group--reverse">
+                  <button type="button" class="btn btn-outline audio-lab__reverse" data-audio-reverse disabled aria-pressed="false">
+                    Reverse: off
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <p class="audio-lab__hint">Headphones recommended. Tap Play once to start — some phones require that before audio tools work.</p>
+          </div>
+
+          <a class="back" href="index.html">← Vault home</a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>Bring the mystery home.</p>
+        <div class="site-footer__links">
+          <a href="https://www.themysterymail.com" target="_blank" rel="noopener noreferrer">themysterymail.com</a>
+          <a href="index.html">Vault home</a>
+          <a href="hints.html">Hints</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/vault-audio.js"></script>
+  </body>
+</html>

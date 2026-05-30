@@ -901,3 +901,170 @@ input[type="text"]::placeholder {
     transform: none;
   }
 }
+
+/* —— Case 2: audio lab (QR transmission page) —— */
+.audio-lab {
+  margin-top: 0.5rem;
+}
+
+.audio-lab__status {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  color: var(--tmm-muted);
+  min-height: 1.35em;
+}
+
+.audio-lab__status:empty {
+  display: none;
+}
+
+.audio-lab__panel {
+  padding: 1.15rem 1.1rem 1.25rem;
+  border: 1px solid var(--tmm-border-strong);
+  border-radius: var(--tmm-radius);
+  background: linear-gradient(180deg, var(--tmm-white) 0%, var(--tmm-cream-2) 100%);
+  box-shadow: var(--shadow-card);
+}
+
+.audio-lab__transport {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1rem;
+}
+
+.audio-lab__play {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 5.5rem;
+  margin-top: 0;
+}
+
+.audio-lab__timeline {
+  flex: 1 1 12rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.audio-lab__time {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tmm-ink-soft);
+  min-width: 2.4rem;
+}
+
+.audio-lab__seek {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  accent-color: var(--tmm-maroon);
+  cursor: pointer;
+}
+
+.audio-lab__seek:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.audio-lab__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem 1.25rem;
+  margin-top: 1.15rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--tmm-border);
+}
+
+.audio-lab__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.audio-lab__group--reverse {
+  margin-left: auto;
+}
+
+.audio-lab__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--tmm-muted);
+}
+
+.audio-lab__speeds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.audio-lab__speed {
+  appearance: none;
+  border: 1px solid var(--tmm-border-strong);
+  border-radius: 999px;
+  background: var(--tmm-white);
+  color: var(--tmm-ink-soft);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.38rem 0.62rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.audio-lab__speed:hover:not(:disabled) {
+  border-color: var(--tmm-maroon);
+  color: var(--tmm-maroon);
+}
+
+.audio-lab__speed--active,
+.audio-lab__speed[aria-pressed="true"] {
+  background: var(--tmm-maroon);
+  border-color: var(--tmm-maroon);
+  color: #fff;
+}
+
+.audio-lab__speed:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.audio-lab__reverse {
+  width: auto;
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.audio-lab__reverse--on,
+.audio-lab__reverse[aria-pressed="true"] {
+  background: var(--tmm-ink);
+  border-color: var(--tmm-ink);
+  color: #fff;
+}
+
+.audio-lab__hint {
+  margin: 0.85rem 0 0;
+  font-size: 0.78rem;
+  color: var(--tmm-muted);
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  .audio-lab__group--reverse {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .audio-lab__reverse {
+    width: 100%;
+  }
+}
