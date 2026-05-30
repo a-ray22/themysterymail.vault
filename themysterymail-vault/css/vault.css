@@ -904,11 +904,18 @@ input[type="text"]::placeholder {
 
 /* —— Case 2: audio lab (QR transmission page) —— */
 .audio-lab__native {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
+  display: none;
+}
+
+.audio-lab--ios .audio-lab__native {
+  display: block;
+  width: 100%;
+  height: 2.75rem;
+  margin: 0 0 1rem;
+}
+
+.audio-lab--ios .audio-lab__transport {
+  display: none;
 }
 
 .audio-lab {

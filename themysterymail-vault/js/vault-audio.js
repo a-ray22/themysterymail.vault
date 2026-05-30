@@ -1,6 +1,13 @@
 (function () {
   "use strict";
 
+  function isIOSDevice() {
+    return (
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    );
+  }
+
   function formatTime(seconds) {
     if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
     const m = Math.floor(seconds / 60);
@@ -21,8 +28,11 @@
   }
 
   function initAudioLab(root) {
-    const src = root.getAttribute("data-src");
-    if (!src) return;
+    const srcMp3 = root.getAttribute("data-src-mp3") || root.getAttribute("data-src");
+    const srcM4a = root.getAttribute("data-src-m4a");
+    const isIOS = isIOSDevice();
+
+    if (isIOS) root.classList.add("audio-lab--ios");
 
     const statusEl = root.querySelector("[data-audio-status]");
     const playBtn = root.querySelector("[data-audio-play]");
@@ -32,15 +42,42 @@
     const reverseBtn = root.querySelector("[data-audio-reverse]");
     const speedBtns = root.querySelectorAll("[data-audio-speed]");
 
-    const audio = document.createElement("audio");
-    audio.className = "audio-lab__native";
+    let audio = root.querySelector("[data-audio-native]");
+    if (!audio) {
+      audio = document.createElement("audio");
+      audio.className = "audio-lab__native";
+      audio.setAttribute("data-audio-native", "");
+      root.appendChild(audio);
+    }
+
     audio.preload = "auto";
     audio.playsInline = true;
+    audio.volume = 1;
+    audio.muted = false;
     audio.setAttribute("playsinline", "");
     audio.setAttribute("webkit-playsinline", "");
-    audio.src = src;
-    root.appendChild(audio);
 
+    if (isIOS) {
+      audio.controls = true;
+    }
+
+    if (!audio.querySelector("source")) {
+      if (srcM4a) {
+        const m4a = document.createElement("source");
+        m4a.src = srcM4a;
+        m4a.type = "audio/mp4";
+        audio.appendChild(m4a);
+      }
+      if (srcMp3) {
+        const mp3 = document.createElement("source");
+        mp3.src = srcMp3;
+        mp3.type = "audio/mpeg";
+        audio.appendChild(mp3);
+      }
+      audio.load();
+    }
+
+    const fetchSrc = srcM4a || srcMp3;
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
 
     let ctx = null;
@@ -93,10 +130,26 @@
       });
     }
 
-    function unlockWebAudio() {
-      if (!AudioCtx) return;
-      if (!ctx) ctx = new AudioCtx();
-      if (ctx.state === "suspended") void ctx.resume();
+    function releaseWebAudio() {
+      stopWaSource();
+      if (ctx) {
+        void ctx.close();
+        ctx = null;
+      }
+      decodedBuffer = null;
+      reversedBuffer = null;
+      decodePromise = null;
+    }
+
+    function initWebAudioFromGesture() {
+      if (!AudioCtx) return null;
+      if (!ctx) {
+        ctx = new AudioCtx();
+      }
+      if (ctx.state === "suspended") {
+        void ctx.resume();
+      }
+      return ctx;
     }
 
     function ensureReverseDecoded() {
@@ -104,12 +157,12 @@
       if (!AudioCtx) return Promise.reject(new Error("no webaudio"));
       if (decodePromise) return decodePromise;
 
-      unlockWebAudio();
+      initWebAudioFromGesture();
 
       decodePromise = Promise.resolve()
         .then(function () {
           if (!arrayBufferCache) {
-            return fetch(src).then(function (res) {
+            return fetch(fetchSrc).then(function (res) {
               if (!res.ok) throw new Error("fetch failed");
               return res.arrayBuffer();
             });
@@ -174,6 +227,7 @@
     function playWaFrom(forwardPos) {
       if (!reversedBuffer || !ctx) return;
       stopWaSource();
+      audio.pause();
       positionForward = Math.max(0, Math.min(duration, forwardPos));
       const offset = Math.max(0, duration - positionForward);
       if (offset >= duration - 0.02) {
@@ -205,23 +259,13 @@
       rafId = window.requestAnimationFrame(tickWa);
     }
 
-    function pauseAll() {
-      if (reverse) {
-        if (waPlaying) {
-          positionForward = waForwardPosition();
-          stopWaSource();
-          updatePlayLabel();
-          syncTimeline();
-        }
-        return;
-      }
-      audio.pause();
-    }
-
     function playForwardFrom(forwardPos) {
+      stopWaSource();
       positionForward = Math.max(0, Math.min(duration, forwardPos));
-      audio.currentTime = positionForward;
+      audio.volume = 1;
+      audio.muted = false;
       audio.playbackRate = speed;
+      audio.currentTime = positionForward;
       const playAttempt = audio.play();
       if (playAttempt && typeof playAttempt.catch === "function") {
         playAttempt.catch(function () {
@@ -231,13 +275,15 @@
     }
 
     function togglePlay() {
-      unlockWebAudio();
-
-      if (!nativeReady && !duration) return;
+      if (!nativeReady && !(duration > 0)) return;
 
       if (reverse) {
+        initWebAudioFromGesture();
         if (waPlaying) {
-          pauseAll();
+          positionForward = waForwardPosition();
+          stopWaSource();
+          updatePlayLabel();
+          syncTimeline();
           return;
         }
         if (positionForward >= duration - 0.02) positionForward = duration;
@@ -275,19 +321,23 @@
 
     function setReverse(nextReverse) {
       if (reverse === nextReverse) return;
-      unlockWebAudio();
 
       const pos = getForwardPosition();
       const wasPlaying = reverse ? waPlaying : !audio.paused;
 
-      if (reverse) stopWaSource();
-      else audio.pause();
+      if (reverse) {
+        stopWaSource();
+        releaseWebAudio();
+      } else {
+        audio.pause();
+      }
 
       reverse = nextReverse;
       updateReverseUi();
       positionForward = pos;
 
       if (reverse) {
+        initWebAudioFromGesture();
         setStatus("Preparing reverse…");
         void ensureReverseDecoded()
           .then(function () {
@@ -307,6 +357,14 @@
       audio.playbackRate = speed;
       syncTimeline();
       if (wasPlaying) playForwardFrom(pos);
+    }
+
+    function markReady() {
+      if (nativeReady) return;
+      nativeReady = true;
+      setControlsEnabled(true);
+      setStatus("");
+      syncTimeline();
     }
 
     playBtn.addEventListener("click", togglePlay);
@@ -334,32 +392,27 @@
     });
 
     reverseBtn.addEventListener("click", function () {
-      unlockWebAudio();
       setReverse(!reverse);
     });
 
     speedBtns.forEach(function (btn) {
       btn.addEventListener("click", function () {
-        unlockWebAudio();
         const rate = parseFloat(btn.getAttribute("data-audio-speed"), 10);
         if (Number.isFinite(rate)) setSpeed(rate);
       });
     });
 
     audio.addEventListener("loadedmetadata", function () {
-      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+      if (Number.isFinite(audio.duration) && audio.duration > 0 && !Number.isNaN(audio.duration)) {
         duration = audio.duration;
         timeDurEl.textContent = formatTime(duration);
         seekEl.max = "1000";
+        if (isIOS) markReady();
       }
     });
 
-    audio.addEventListener("canplaythrough", function () {
-      nativeReady = true;
-      setControlsEnabled(true);
-      setStatus("");
-      syncTimeline();
-    });
+    audio.addEventListener("canplay", markReady);
+    audio.addEventListener("canplaythrough", markReady);
 
     audio.addEventListener("timeupdate", function () {
       if (!reverse && !seekDragging) syncTimeline();
@@ -390,17 +443,19 @@
     updatePlayLabel();
     setStatus("Loading audio…");
 
-    fetch(src)
-      .then(function (res) {
-        if (!res.ok) throw new Error("fetch failed");
-        return res.arrayBuffer();
-      })
-      .then(function (arr) {
-        arrayBufferCache = arr;
-      })
-      .catch(function () {
-        /* native audio element may still load the file */
-      });
+    if (fetchSrc) {
+      fetch(fetchSrc)
+        .then(function (res) {
+          if (!res.ok) throw new Error("fetch failed");
+          return res.arrayBuffer();
+        })
+        .then(function (arr) {
+          arrayBufferCache = arr;
+        })
+        .catch(function () {
+          /* native audio element may still load the file */
+        });
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {

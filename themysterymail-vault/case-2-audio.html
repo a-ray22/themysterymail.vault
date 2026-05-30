@@ -37,8 +37,18 @@
             <p>Listen to the recording below. Use the tools if you need to slow it down or play it in reverse.</p>
           </div>
 
-          <div class="audio-lab" data-audio-lab data-src="audio/case-2/transmission.mp3">
+          <div
+            class="audio-lab"
+            data-audio-lab
+            data-src-m4a="audio/case-2/transmission.m4a"
+            data-src-mp3="audio/case-2/transmission.mp3"
+          >
             <p class="audio-lab__status" data-audio-status aria-live="polite">Loading audio…</p>
+
+            <audio class="audio-lab__native" data-audio-native preload="auto" playsinline>
+              <source src="audio/case-2/transmission.m4a" type="audio/mp4" />
+              <source src="audio/case-2/transmission.mp3" type="audio/mpeg" />
+            </audio>
 
             <div class="audio-lab__panel">
               <div class="audio-lab__transport">
@@ -80,7 +90,7 @@
               </div>
             </div>
 
-            <p class="audio-lab__hint">Headphones recommended. On iPhone, turn off Silent mode (switch on the side) and raise volume if you hear nothing. Reverse mode uses advanced playback and may take a moment to prepare.</p>
+            <p class="audio-lab__hint">Headphones recommended. On iPhone, use the built-in player bar above, turn off Silent mode, and raise volume. Speed buttons still work with that player.</p>
           </div>
 
           <a class="back" href="index.html">← Vault home</a>
@@ -99,6 +109,6 @@
       </div>
     </footer>
 
-    <script src="js/vault-audio.js"></script>
+    <script src="js/vault-audio.js?v=3"></script>
   </body>
 </html>
