@@ -22,7 +22,7 @@
     const speedBtns = root.querySelectorAll("[data-audio-speed]");
 
     const audioFwd = root.querySelector("[data-audio-forward]");
-    const audioRev = root.querySelector("[data-audio-reverse]");
+    const audioRev = root.querySelector("[data-audio-reversed]");
     if (!audioFwd || !audioRev) return;
 
     [audioFwd, audioRev].forEach(function (el) {
