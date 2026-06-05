@@ -440,6 +440,127 @@
   margin-bottom: 0.25rem;
 }
 
+.page-hints .checkpoint--answers summary {
+  color: #f5d0d0;
+}
+
+.page-hints .answers-reveal {
+  padding: 0 1rem 1rem;
+}
+
+.page-hints .answers-warning {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.page-hints .answers-heading {
+  margin: 1.25rem 0 0.65rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e8c87a;
+}
+
+.page-hints .answers-heading:first-of-type {
+  margin-top: 0.35rem;
+}
+
+.page-hints .answers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.65rem;
+}
+
+.page-hints .answer-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--tmm-radius-sm);
+  padding: 0.75rem;
+}
+
+.page-hints .answer-card__head b {
+  color: #e8c87a;
+  font-size: 0.88rem;
+}
+
+.page-hints .answer-card__text {
+  margin: 0.55rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.page-hints .brahmi-glyphs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+  padding: 0.45rem;
+  background: rgba(253, 252, 247, 0.94);
+  border-radius: 6px;
+}
+
+.page-hints .brahmi-glyph {
+  display: block;
+  width: auto;
+  height: 2.4rem;
+  max-width: 3.25rem;
+  object-fit: contain;
+}
+
+.page-hints .brahmi-glyph--wide {
+  max-width: 4.5rem;
+}
+
+.page-hints .codebox--solo {
+  max-width: 20rem;
+}
+
+.page-hints .answers-note {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+.page-hints .answers-final-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.page-hints .answer-final-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--tmm-radius-sm);
+  padding: 0.6rem 0.75rem;
+}
+
+.page-hints .answer-final-num {
+  grid-row: 1 / span 2;
+  font-weight: 700;
+  color: #e8c87a;
+  font-variant-numeric: tabular-nums;
+}
+
+.page-hints .answer-final-item .brahmi-glyphs {
+  margin-top: 0;
+  grid-column: 2;
+}
+
+.page-hints .answer-final-meaning {
+  grid-column: 2;
+  font-size: 0.88rem;
+  color: var(--tmm-cream);
+}
+
 @media (max-width: 620px) {
   .page-hints .grid {
     grid-template-columns: 1fr;

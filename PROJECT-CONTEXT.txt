@@ -43,6 +43,8 @@ Case 2 — audio transmission (speed + reverse):
 
 Puzzle hints (progressive guides; add new games to hints.html over time):
   https://a-ray22.github.io/themysterymail.vault/hints.html
+  Case 1 section: Final Whistle props
+  Case 2 section: Lost in the Himalaya (diary notes, police files, envelope, final photo)
 
 If you connected a subdomain on Wix DNS (example):
   https://vault.themysterymail.com/
